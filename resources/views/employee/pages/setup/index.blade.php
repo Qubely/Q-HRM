@@ -45,9 +45,9 @@
                                                 <div class="input-group">
                                                     <input type="file" class="form-control" name="image" id="image"/>
                                                 </div>
-                                                @if(imageExists(Auth::user(),'300X300'))
+                                                @if(imageExists(Auth::user(),'400X400'))
                                                     <input type="hidden"  id="img_uploaded" name="img_uploaded" value="yes"/>
-                                                    <p class=""> {{pxLang($data['lang'],'titles.uploaded_image')}}  <a href="{{ getRowImage(Auth::user(),'300X300') }}" download> {{pxLang($data['lang'],'titles.image')}} </a></p>
+                                                    <p class=""> {{pxLang($data['lang'],'titles.uploaded_image')}}  <a href="{{ getRowImage(Auth::user(),'400X400') }}" download> {{pxLang($data['lang'],'titles.image')}} </a></p>
                                                 @else
                                                     <input type="hidden"  id="img_uploaded" name="img_uploaded" value="no"/>
                                                 @endif
