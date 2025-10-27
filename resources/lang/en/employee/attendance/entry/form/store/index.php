@@ -1,0 +1,39 @@
+<?php
+return [
+    'pageTitle' => '',
+    'pageSubTitle' => '',
+    'add' => 'Add New Attendance',
+    'update' => 'Update Attendance',
+    'breadCum' => [
+        'title' => 'Today\'s Attendance',
+        'b1' => 'Attendance',
+        'b2' => 'Manage',
+        'b3' => 'Entry'
+    ],
+    'nav' => [
+        'item1' => 'LibTimeZone crud'
+    ],
+    'mgs' => [
+        'chrome_required' => 'Only chrome browser required',
+        'employee_no_found' => 'Employee not found, try again'
+    ],
+    'fields' => [
+        'name' => 'Name',
+        'email' => 'Email',
+    ],
+    'module' => [
+        'title' => 'Attendance For',
+        'in_time' => [
+            'name' => 'In Time',
+            'image' => 'Location Image',
+            'btn_entry' => 'Enroll'
+        ],
+        'out_time' => [
+            'name' => 'Out Time',
+            'image' => 'Location Image',
+            'btn_entry' => 'Sign Out'
+        ]
+    ],
+    'table' => [
+    ]
+];
