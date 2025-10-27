@@ -1,5 +1,13 @@
 $(document).ready(function(){
 
+    $('#image').imageCropper({
+        outputWidth: 400,
+        outputHeight: 400,
+        mimeType: 'image/jpeg',
+        boundingBox: { width: 250, height: 250 },
+        quality: 1
+    });
+
     if ($('#frmStoreAdminUser').length > 0) {
         let rules = {
             admin_type: {

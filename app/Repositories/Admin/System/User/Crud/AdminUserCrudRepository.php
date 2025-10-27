@@ -19,8 +19,8 @@ class AdminUserCrudRepository extends BaseRepository implements IAdminUserCrudRe
     use BaseTrait;
     public function __construct() {
         $this->sizes =  [
-            ['width'=> 400, 'height'=> 400,'com'=> 70],
-            ['width'=> 80, 'height'=> 80,'com'=> 10],
+            ['width'=> 400, 'height'=> 400,'com'=> 100],
+            ['width'=> 80, 'height'=> 80,'com'=> 100],
         ];
         $this->baseCondition = [['is_secret','=','no'],['admin_type','=','system_user']];
     }
