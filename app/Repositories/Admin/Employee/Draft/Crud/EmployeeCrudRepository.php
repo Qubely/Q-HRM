@@ -10,7 +10,7 @@ use App\Traits\BaseTrait;
 use Carbon\Carbon;
 use DataTables;
 use Illuminate\Support\Facades\Validator;
-use Illuminate\Http\JsonResponse;k
+use Illuminate\Http\JsonResponse;
 use Auth;
 use DB;
 use Webpatser\Uuid\Uuid;

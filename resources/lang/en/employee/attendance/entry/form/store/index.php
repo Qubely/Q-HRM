@@ -15,7 +15,8 @@ return [
     ],
     'mgs' => [
         'chrome_required' => 'Only chrome browser required',
-        'employee_no_found' => 'Employee not found, try again'
+        'employee_no_found' => 'Employee not found, try again',
+        'no_intime' => 'In Time not found, try again'
     ],
     'fields' => [
         'name' => 'Name',

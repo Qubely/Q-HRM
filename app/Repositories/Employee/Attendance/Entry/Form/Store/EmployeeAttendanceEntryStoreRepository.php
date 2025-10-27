@@ -2,6 +2,7 @@
 
 namespace App\Repositories\Employee\Attendance\Entry\Form\Store;
 
+use App\Models\Employee;
 use App\Models\EmployeeAttendance;
 use App\Repositories\BaseRepository;
 use App\Traits\BaseTrait;
@@ -10,6 +11,7 @@ use DB;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Validator;
 use Response;
+use Auth;
 class  EmployeeAttendanceEntryStoreRepository extends BaseRepository implements IEmployeeAttendanceEntryStoreRepository {
 
     use BaseTrait;
@@ -33,7 +35,8 @@ class  EmployeeAttendanceEntryStoreRepository extends BaseRepository implements 
                 onlyTitle: true
             )
         );
-       return $this->getPageDefault(model: $this->EmployeeAttendance, id: $id);
+        $att = EmployeeAttendance::where('employee_id', Auth::user()->id)->whereDate('att_date', date('Y-m-d'))->first();
+        return [...$this->getPageDefault(model: $this->EmployeeAttendance, id: $id), 'att' => $att];
     }
 
     /**
@@ -44,15 +47,13 @@ class  EmployeeAttendanceEntryStoreRepository extends BaseRepository implements 
      */
     public function store($request) : JsonResponse
     {
-        print_r($request->all());
-        die();
         $userAgent = $request->header('User-Agent');
         if (!str_contains($userAgent, 'Chrome')) {
-           return $this->response(['type'=>'noUpdate','title'=>  pxLang($this->lang,'mgs.chrome_required')]);
+           return $this->response(['type'=>'noUpdate','title'=>  pxLang($request->lang,'mgs.chrome_required')]);
         }
-        $employee = HrmEmployee::where([['id','=',$request->employee_id]])->first();
+        $employee = Employee::where([['id','=',$request->employee_id]])->first();
         if(empty($employee)) {
-            return $this->response(['type'=>'noUpdate','title'=> pxLang($this->lang,'mgs.employee_no_found')]);
+            return $this->response(['type'=>'noUpdate','title'=> pxLang($request->lang,'mgs.employee_no_found')]);
         }
         $today = Carbon::now()->format('Y-m-d');
         $nowTime =  Carbon::now()->format('H:i:s');
@@ -66,8 +67,8 @@ class  EmployeeAttendanceEntryStoreRepository extends BaseRepository implements 
                     ],
                     [
                         'in_time' => $nowTime,
-                        'lang_in' => $request->lang,
-                        'lati_in' => $request->lati,
+                        'longitude_in' => $request->longitude,
+                        'latitude_in' => $request->latitude,
                         'status' => 'present',
                     ]
                 );
@@ -83,18 +84,53 @@ class  EmployeeAttendanceEntryStoreRepository extends BaseRepository implements 
                     $ex->device_id = 'user';
                     $ex->status = 'present';
                     $ex->in_time =  $nowTime;
-                    $ex->lang_in =  $request->lang;
-                    $ex->lati_in =  $request->lati;
+                    $ex->longitude_in =  $request->longitude;
+                    $ex->latitude_in =  $request->latitude;
                     $ex->save();
                 }
             }
             $response['extraData'] = [
-                'inflate' => pxLang($this->lang,'common.action_success')
+                'inflate' => pxLang($request->lang,'','common.action_success')
             ];
             return $this->response(['type' => 'success', 'data' => $response]);
         } catch (\Exception $e) {
             $this->saveError($this->getSystemError(['name' => 'employee_attendance_store_error']), $e);
             return $this->response(['type' => 'wrong', 'lang' => 'server_wrong '.$e->getMessage()]);
+        }
+    }
+
+     /**
+     * Update attendace
+     *
+     * @param Request  $request
+     * @return JsonResponse
+     */
+    public function update($request) : JsonResponse
+    {
+        $userAgent = $request->header('User-Agent');
+        if (!str_contains($userAgent, 'Chrome')) {
+           return $this->response(['type'=>'noUpdate','title'=>  pxLang($request->lang,'mgs.chrome_required')]);
+        }
+        $employee = Employee::where([['id','=',$request->employee_id]])->first();
+        if(empty($employee)) {
+            return $this->response(['type'=>'noUpdate','title'=> pxLang($request->lang,'mgs.employee_no_found')]);
+        }
+        $today = Carbon::now()->format('Y-m-d');
+        $ex = EmployeeAttendance::where([['employee_id','=',$employee->id],['att_date','=', $today]])->first();
+        if(empty($ex)) {
+            return $this->response(['type'=>'noUpdate','title'=> pxLang($request->lang,'mgs.no_intime')]);
+        }
+        $nowTime =  Carbon::now()->format('H:i:s');
+        try {
+            $ex->out_time =  $nowTime;
+            $ex->longitude_in =  $request->longitude;
+            $ex->latitude_in =  $request->latitude;
+            $ex->save();
+            $response['extraData'] = ['inflate' => pxLang($request->lang,'','common.action_success')];
+            return $this->response(['type' => 'success', 'data' => $response]);
+        } catch (\Exception $e) {
+            $this->saveError($this->getSystemError(['name' => 'UqProfession_store_error']), $e);
+            return $this->response(['type' => 'wrong', 'lang' => 'server_wrong']);
         }
     }
 }

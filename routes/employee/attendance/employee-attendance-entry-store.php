@@ -6,5 +6,6 @@ use Illuminate\Support\Facades\Route;
 Route::prefix('employee')->group(function(){
     Route::get('attendance/entry/store',[EmployeeAttendanceEntryStoreController::class,'index']);
     Route::post('attendance/entry/store',[EmployeeAttendanceEntryStoreController::class,'store']);
+    Route::post('attendance/entry/update',[EmployeeAttendanceEntryStoreController::class,'update']);
     //vpx_attach
 });

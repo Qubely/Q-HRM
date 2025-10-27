@@ -7,7 +7,6 @@
             padding: 20px 40px;
             border: 2px solid #00ffff;
             border-radius: 10px;
-
             text-align: center;
             background-color: #000;
         }
@@ -17,6 +16,32 @@
             vertical-align: super;
             color: #ff00ff;
             margin-left: 8px;
+        }
+        .time-card {
+            background: #0d6efd;
+            color: #fff;
+            border-radius: 15px;
+            padding: 50px 40px;
+            text-align: center;
+            box-shadow: 0 8px 25px rgba(0,0,0,0.2);
+        }
+        .time-card h1 {
+            font-size: 4rem;
+            margin: 0;
+            font-weight: bold;
+        }
+        .time-card p {
+            font-size: 1.2rem;
+            margin-top: 10px;
+            opacity: 0.8;
+        }
+        .fa-clock {
+            font-size: 2rem;
+            margin-bottom: 15px;
+            color: #ffc107;
+        }
+        .time-title {
+            color: white;
         }
     </style>
     <div class="row">

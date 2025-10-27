@@ -22,10 +22,10 @@ return new class extends Migration
             $table->string('att_remarks')->nullable();
             $table->string('in_image')->nullable();
             $table->string('out_image')->nullable();
-            $table->string('lang_in')->nullable();
-            $table->string('lati_in')->nullable();
-            $table->string('lang_out')->nullable();
-            $table->string('lati_out')->nullable();
+            $table->string('longitude_in')->nullable();
+            $table->string('latitude_in')->nullable();
+            $table->string('longitude_out')->nullable();
+            $table->string('latitude_out')->nullable();
             $table->string('sent_sms')->default('no');
             $table->timestamps();
         });

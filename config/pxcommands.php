@@ -63,6 +63,7 @@ return [
                     'datatable5'
                 ],
                 'local' => [
+                    'px/plugins',
                     'px',
                     'panel/employee',
                     'panel/minible'
@@ -86,6 +87,7 @@ return [
                     'dateTimePicker'
                 ],
                 'local' => [
+                    'px/plugins',
                     'px',
                     'panel/employee',
                     'panel/minible'

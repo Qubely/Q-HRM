@@ -44,5 +44,16 @@ class EmployeeAttendanceEntryStoreController extends Controller {
     {
        return $this->iEmployeeAttendanceEntryStoreRepo->store($request);
     }
+
+     /**
+     * Update employeeattendance form
+     *
+     * @param Request $request
+     * @return void
+     */
+    public function update(ValidateEmployeeAttendanceEntryStore $request)
+    {
+       return $this->iEmployeeAttendanceEntryStoreRepo->update($request);
+    }
 }
 

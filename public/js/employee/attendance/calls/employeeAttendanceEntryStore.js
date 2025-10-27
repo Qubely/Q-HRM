@@ -4,8 +4,8 @@ $(document).ready(function(){
        sendTiming('frmEmployeeAttendanceEntryStore', 'in')
     }
 
-    if ($('#frmEmployeeAttendanceSignOutStore').length > 0) {
-       sendTiming('frmEmployeeAttendanceEntryStore', 'out')
+    if ($('#frmEmployeeAttendanceSignOut').length > 0) {
+       sendTiming('frmEmployeeAttendanceSignOut', 'out')
     }
 
 });
@@ -22,17 +22,18 @@ function sendTiming(frm, type){
             }
             navigator.geolocation.getCurrentPosition(
                 function(position) {
-                    const lati = position.coords.latitude;
-                    const lang = position.coords.longitude;
+                    const latitude = position.coords.latitude;
+                    const longitude = position.coords.longitude;
                     let newbody = op.body;
-                    newbody.append('lati', lati);
-                    newbody.append('lang', lang);
+                    newbody.append('latitude', latitude);
+                    newbody.append('langututute', longitude);
+                    console.log(lang);
                     callback({ ...op, body: newbody });
                 },
                 function(error) {
                     let newbody = op.body;
-                    newbody.append('lati', 23.785495);
-                    newbody.append('lang', 90.3291017);
+                    newbody.append('latitude', 28.476169);
+                    newbody.append('longitude', 77.091228);
                     callback({ ...op, body: newbody });
                 },
                 {

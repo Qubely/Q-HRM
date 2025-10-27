@@ -1,5 +1,5 @@
 $(document).ready(function(){
-   $('#image').imageCropper({
+    $('#image').imageCropper({
         outputWidth: 400,
         outputHeight: 400,
         mimeType: 'image/jpeg',

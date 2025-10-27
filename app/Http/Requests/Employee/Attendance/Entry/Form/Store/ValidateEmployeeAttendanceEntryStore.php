@@ -30,8 +30,8 @@ class ValidateEmployeeAttendanceEntryStore extends FormRequest
     {
         return [
             'employee_id' => 'required|exists:employees,id',
-            'lati' => 'required|numeric',
-            'lang' => 'required|numeric',
+            'latitude' => 'required|numeric',
+            'longitude' => 'required|numeric',
         ];
     }
 
