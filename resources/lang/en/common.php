@@ -46,7 +46,8 @@ return [
 		"crud_action_add" => "Add",
 		"crud_action_update" => "Update",
         "confirm" => "Confirm",
-		"cancel" => "Cancel"
+		"cancel" => "Cancel",
+        'crud_load' => 'Load'
 	],
 	"text" => [
 		"option_select" => "Select"

@@ -76,4 +76,9 @@ class Employee extends Authenticatable
     {
         return (in_array('SA',$this->user_access)) ? true : count(array_intersect($this->user_access, $permissions)) > 0;
     }
+
+    public function attendances()
+    {
+        return $this->hasMany(EmployeeAttendance::class,'employee_id','id');
+    }
 }

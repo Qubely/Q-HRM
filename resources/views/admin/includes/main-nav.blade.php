@@ -45,12 +45,17 @@
                 </li>
                 <li>
                     <a href="javascript: void(0);" class="has-arrow waves-effect">
-                        <i class="fa fa-user-clock"></i>
+                        <i class="fa fa-user-clock" style="font-size: 13px;"></i>
                         <span>{{pxLang('admin.main-nav','attendance.menu')}}</span>
                     </a>
                     <ul class="sub-menu">
                         <li>
-                            <a href="{{url('admin/employee/draft')}}">{{pxLang('admin.main-nav','attendance.menu.attendance_view')}}</a>
+                            <a href="javascript: void(0);"  class="has-arrow waves-effect">{{pxLang('admin.main-nav','attendance.menu.attendance_report')}}</a>
+                            <ul class="sub-menu">
+                                <li>
+                                    <a href="{{url('admin/attendance/report/employee/month-wise')}}">{{pxLang('admin.main-nav','attendance.menu.attendance_report_monthly')}}</a>
+                                </li>
+                            </ul>
                         </li>
                     </ul>
                 </li>

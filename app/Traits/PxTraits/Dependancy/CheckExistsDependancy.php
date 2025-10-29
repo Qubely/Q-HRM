@@ -1,5 +1,8 @@
 <?php
 namespace App\Traits\PxTraits\Dependancy;
+
+use Carbon\Carbon;
+use Response;
 trait CheckExistsDependancy
 {
     public function checkExists($request,$data,$select=['*']){
@@ -44,7 +47,7 @@ trait CheckExistsDependancy
     }
 
     public function checkBlukDirty($op)
-    {   
+    {
         $request = $op['request'];
         $rows = $op['rows'] ?? [];
         $match = $op['match'] ?? [];
@@ -63,7 +66,7 @@ trait CheckExistsDependancy
     }
 
     public function checkBlukValidation($op)
-    {   
+    {
         $request = $op['request'] ?? [];
         $search = $op['search'] ?? [];
         $match = $op['match'] ?? [];
@@ -79,25 +82,25 @@ trait CheckExistsDependancy
                             if($given_value == "") {
                                 $errors[] = $item_key." can not be empty in row ".($rowCount);
                                 break;
-                            }    
+                            }
                         }
                         if(array_key_exists("number",$item_value) && $item_value) {
                             if(!is_numeric($given_value)) {
                                 $errors[] = $item_key." must be a number in row ".($rowCount);
                                 break;
-                            }    
+                            }
                         }
                         if(array_key_exists("min",$item_value) && $item_value) {
                             if($given_value < $item_value['min']) {
                                 $errors[] = $item_key." can not be less than ".($item_value['min'])." in  row ".($rowCount);
                                 break;
-                            }    
+                            }
                         }
                         if(array_key_exists("max",$item_value) && $item_value) {
                             if($given_value < $item_value['max']) {
                                 $errors[] = $item_key." can not be greter than ".($item_value['max'])." in  row ".($rowCount);
                                 break;
-                            }    
+                            }
                         }
                         if(array_key_exists("unique",$item_value)) {
                             $model =  $item_value['unique']['model'] ?? null;
@@ -133,5 +136,14 @@ trait CheckExistsDependancy
             $errors[] = "No items selected";
         }
         return $errors;
+    }
+
+    public function cheExccedTotalDate($request,$dateCount=31){
+        $from_date = Carbon::parse($request->from_date)->startOfDay();
+        $to_date   = Carbon::parse($request->to_date)->endOfDay();
+        $totalDays = $from_date->diffInDays($to_date);
+        if ($totalDays >= $dateCount) {
+            return true;
+        }
     }
 }

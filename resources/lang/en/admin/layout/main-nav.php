@@ -3,7 +3,8 @@
 return [
     'dashboard' => 'Dashboard',
     'attendance.menu' => 'Attendance',
-    'attendance.menu.attendance_view' => 'Attendance Report',
+    'attendance.menu.attendance_report' => 'Attendance Report',
+    'attendance.menu.attendance_report_monthly' => 'Monthly Report',
     'employee.menu' => 'Manage Employee',
     'employee.menu.draft' => 'Draft Employee',
     'employee.menu.active' => 'Active Employee',

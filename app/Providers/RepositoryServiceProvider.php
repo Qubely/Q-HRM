@@ -6,6 +6,8 @@ use App\Repositories\BaseRepository;
 use App\Repositories\IBaseRepository;
 use Illuminate\Support\ServiceProvider;
 //vpx_imports
+use App\Repositories\Admin\Attendance\Report\Employee\Load\MonthWise\IMonthWiseLoadRepository;
+use App\Repositories\Admin\Attendance\Report\Employee\Load\MonthWise\MonthWiseLoadRepository;
 use App\Repositories\Employee\Attendance\Entry\Form\Store\IEmployeeAttendanceEntryStoreRepository;
 use App\Repositories\Employee\Attendance\Entry\Form\Store\EmployeeAttendanceEntryStoreRepository;
 use App\Repositories\Admin\Employee\Active\Dt\ActiveEmployee\IActiveEmployeeDtRepository;
@@ -57,6 +59,7 @@ class RepositoryServiceProvider extends ServiceProvider
         {
             $this->app->bind(abstract: IBaseRepository::class, concrete: BaseRepository::class);
             //vpx_attach
+            $this->app->bind(abstract: IMonthWiseLoadRepository::class, concrete: MonthWiseLoadRepository::class);
             $this->app->bind(abstract: IEmployeeAttendanceEntryStoreRepository::class, concrete: EmployeeAttendanceEntryStoreRepository::class);
             $this->app->bind(abstract: IActiveEmployeeDtRepository::class, concrete: ActiveEmployeeDtRepository::class);
             $this->app->bind(abstract: IViewDraftEmployeeRepository::class, concrete: ViewDraftEmployeeRepository::class);

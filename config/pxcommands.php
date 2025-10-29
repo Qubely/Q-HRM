@@ -49,7 +49,8 @@ return [
                     'reset',
                     'system',
                     'data-library',
-                    'employee'
+                    'employee',
+                    'attendance'
                 ]
             ]
         ],
@@ -162,6 +163,7 @@ return [
         'employee.user.pass.update' => 'employee/setup/pass/index',
         'employee.user.nav' => 'employee/setup/navs/index',
         'employee.system.user' => 'employee/system/user/index',
-        'employee.attendance.entry.form.store' => 'employee/attendance/entry/form/store/index'
+        'employee.attendance.entry.form.store' => 'employee/attendance/entry/form/store/index',
+        'admin.attendance.report.employee.load' => 'admin/attendance/report/employee/load/index'
     ]
 ];
