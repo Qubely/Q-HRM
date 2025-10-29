@@ -45,6 +45,17 @@
                 </li>
                 <li>
                     <a href="javascript: void(0);" class="has-arrow waves-effect">
+                        <i class="fa fa-user-clock"></i>
+                        <span>{{pxLang('admin.main-nav','attendance.menu')}}</span>
+                    </a>
+                    <ul class="sub-menu">
+                        <li>
+                            <a href="{{url('admin/employee/draft')}}">{{pxLang('admin.main-nav','attendance.menu.attendance_view')}}</a>
+                        </li>
+                    </ul>
+                </li>
+                <li>
+                    <a href="javascript: void(0);" class="has-arrow waves-effect">
                         <i class="bx bx-data"></i>
                         <span>{{pxLang('admin.main-nav','data-library.menu')}}</span>
                     </a>
