@@ -13,10 +13,11 @@ return new class extends Migration
     {
         Schema::create('employee_attendance_histories', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('employee_attendance');
+            $table->foreignId('employee_attendance_id');
             $table->string('type',25);
             $table->string('title')->nullable();
             $table->string('time',100)->nullable();
+            $table->string('image')->nullable();
             $table->timestamps();
         });
     }

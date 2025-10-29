@@ -9,13 +9,13 @@
     <div class="mt-3">
         <div class="card p-2 shadow-card card-border">
             <div class="form-group text-left mb-3 mt-4">
-                <label class="form-label"> <b>{{pxLang($data['lang'],'module.out_time.image')}}</b> <em class="required"></em> <span id="image_error"></span></label>
+                <label class="form-label"> <b>{{pxLang($data['lang'],'module.out_time.image')}}</b> <em class="required"></em> <span id="out_image_error"></span></label>
                 <div class="input-group">
-                    <input type="file" class="form-control" name="image" id="image" accept="*">
+                    <input type="file" class="form-control" name="out_image" id="out_image" accept="*">
                 </div>
             </div>
             <div class="mb-3 mt-3 text-end">
-                <button class="btn btn-primary btn-sm" type="submit">{{pxLang($data['lang'],'module.out_time.btn_entry')}} </button>
+                <button class="btn btn-warning btn-sm w-100" type="submit">{{pxLang($data['lang'],'module.out_time.btn_entry')}} </button>
             </div>
         </div>
     </div>

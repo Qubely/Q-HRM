@@ -1,1 +1,374 @@
-!function(e){const t={outputWidth:800,outputHeight:600,aspectRatio:null,maxFileSize:95e3,allowedMb:10,mimeType:"image/jpeg",quality:.92,minQuality:.5,maxDimension:4e3,onOpen:null,onClose:null,onComplete:null,boundingBox:null};function n(e){const t=e.split(","),n=t[0].match(/:(.*?);/),i=n?n[1]:"",a=atob(t[1]),o=a.length,l=new Uint8Array(o);for(let e=0;e<o;e++)l[e]=a.charCodeAt(e);return new Blob([l],{type:i})}e.fn.imageCropper=function(i){const a=e.extend({},t,i||{});if(!a.outputWidth||!a.outputHeight)return console.error("imageCropper: outputWidth and outputHeight must be specified."),this;let o=null,l=null;function c(t,i){const c=function(){if(o)return o;const t=e('<div class="icp-overlay" style="display:none"></div>'),n=e('\n        <div class="icp-modal" role="dialog" aria-modal="true" aria-label="Image cropper">\n          <div class="icp-header">\n            <div>\n              <div class="icp-title">Crop Image</div>\n              <div class="icp-hint">Drag to pan; mousewheel to zoom; use slider to adjust zoom.</div>\n            </div>\n            <div>\n              <button class="icp-btn secondary icp-cancel">Cancel</button>\n              <button class="icp-btn icp-confirm">Crop & Save</button>\n            </div>\n          </div>\n          <div class="icp-body">\n            <div class="icp-canvas-wrap">\n              <canvas class="icp-canvas"></canvas>\n              <div class="icp-crop-box" aria-hidden="true"></div>\n            </div>\n            <div class="icp-controls">\n              <div>\n                <label>Zoom</label>\n                <input type="range" class="icp-zoom" min="0.1" max="3" step="0.01" value="1">\n              </div>\n              <div>\n                <label>Preview output size</label>\n                <div class="icp-preview" style="border:1px solid #ddd; padding:6px; text-align:center;">\n                  <canvas class="icp-preview-canvas" width="200" height="150" style="max-width:100%;height:auto"></canvas>\n                </div>\n              </div>\n              <div style="margin-top:auto">\n                <div style="font-size:13px;color:#444">Output: <span class="icp-output-size"></span></div>\n                <div style="font-size:12px;color:#666;margin-top:6px">Format: <span class="icp-mime"></span></div>\n              </div>\n            </div>\n          </div>\n          <div class="icp-footer">\n            <button class="icp-btn secondary icp-cancel2">Cancel</button>\n            <button class="icp-btn icp-confirm2">Crop & Save</button>\n          </div>\n        </div>\n      ');return t.append(n),e("body").append(t),o={$overlay:t,$modal:n,$canvas:n.find(".icp-canvas"),$cropBox:n.find(".icp-crop-box"),$zoom:n.find(".icp-zoom"),$previewCanvas:n.find(".icp-preview-canvas"),$outputSize:n.find(".icp-output-size"),$mime:n.find(".icp-mime"),$confirm:n.find(".icp-confirm, .icp-confirm2"),$cancel:n.find(".icp-cancel, .icp-cancel2")},o}(),s=c.$canvas[0],r=s.getContext("2d"),d=c.$previewCanvas[0],m=d.getContext("2d");l={img:new Image,imgNaturalWidth:0,imgNaturalHeight:0,translate:{x:0,y:0},scale:1,dragging:!1,lastPointer:null},c.$mime.text(a.mimeType),c.$outputSize.text(`${a.outputWidth}px × ${a.outputHeight}px`);const p=new FileReader;p.onload=function(e){l.img.onload=function(){let e=l.img.naturalWidth,t=l.img.naturalHeight;if(a.maxDimension&&Math.max(e,t)>a.maxDimension){const i=a.maxDimension/Math.max(e,t);e=Math.round(e*i),t=Math.round(t*i);const o=document.createElement("canvas");o.width=e,o.height=t;o.getContext("2d").drawImage(l.img,0,0,e,t),l.img=new Image,l.img.onload=n,l.img.src=o.toDataURL("image/png")}else n();function n(){l.imgNaturalWidth=l.img.naturalWidth||e,l.imgNaturalHeight=l.img.naturalHeight||t;const n=c.$canvas.parent()[0].getBoundingClientRect(),i=Math.max(300,Math.floor(n.width)),o=Math.max(200,Math.floor(Math.min(n.height,.6*window.innerHeight))),d=window.devicePixelRatio||1;s.width=i*d,s.height=o*d,s.style.width=i+"px",s.style.height=o+"px",r.setTransform(d,0,0,d,0,0),r.imageSmoothingQuality="high";const m=Math.min(i/l.imgNaturalWidth,o/l.imgNaturalHeight,1);let p,u;if(l.scale=m,l.translate.x=(i-l.imgNaturalWidth*l.scale)/2,l.translate.y=(o-l.imgNaturalHeight*l.scale)/2,a.boundingBox&&a.boundingBox.width&&a.boundingBox.height)p=a.boundingBox.width,u=a.boundingBox.height;else{const e=a.aspectRatio||a.outputWidth/a.outputHeight,t=.8*o;p=.8*i,u=p/e,u>t&&(u=t,p=u*e)}c.$cropBox.css({width:p+"px",height:u+"px",left:(i-p)/2+"px",top:(o-u)/2+"px"}),c.$zoom.attr("min",.1),c.$zoom.attr("max",Math.max(3,5*l.scale)),c.$zoom.val(l.scale),b(),C()}},l.img.src=e.target.result},p.readAsDataURL(t),c.$overlay.fadeIn(100),"function"==typeof a.onOpen&&a.onOpen();let u=!1;function g(e){return e.touches&&e.touches.length?{x:e.touches[0].clientX,y:e.touches[0].clientY}:{x:e.clientX,y:e.clientY}}function f(e,t){const n=s.getBoundingClientRect();return{x:e-n.left,y:t-n.top}}function h(e){e.preventDefault(),u=!0;const t=g(e),n=f(t.x,t.y);l.dragging=!0,l.lastPointer=n}function v(e){if(!l||!l.img)return;if(!l.dragging)return;e.preventDefault();const t=g(e),n=f(t.x,t.y),i=n.x-l.lastPointer.x,a=n.y-l.lastPointer.y;l.translate.x+=i,l.translate.y+=a,l.lastPointer=n,b(),C()}function x(e){l.dragging=!1}function y(e){if(e.preventDefault(),!l||!l.img)return;const t=-e.deltaY>0?1.08:.92,n=f(e.clientX,e.clientY),i=l.scale;let a=(o=i*t,s=parseFloat(c.$zoom.attr("min")),r=parseFloat(c.$zoom.attr("max")),Math.max(s,Math.min(r,o)));var o,s,r;const d=(n.x-l.translate.x)/i,m=(n.y-l.translate.y)/i;l.scale=a,l.translate.x=n.x-d*a,l.translate.y=n.y-m*a,c.$zoom.val(l.scale),b(),C()}function w(){if(!l)return;const e=parseFloat(c.$zoom.val()),t=c.$cropBox[0].getBoundingClientRect(),n=s.getBoundingClientRect(),i=(t.left+t.right)/2-n.left,a=(t.top+t.bottom)/2-n.top,o=l.scale,r=(i-l.translate.x)/o,d=(a-l.translate.y)/o;l.scale=e,l.translate.x=i-r*e,l.translate.y=a-d*e,b(),C()}function b(){if(!l||!l.img)return;const e=window.devicePixelRatio||1,t=s.width/e,n=s.height/e;r.clearRect(0,0,t,n),r.fillStyle="#222",r.fillRect(0,0,t,n),r.save(),r.translate(l.translate.x,l.translate.y),r.scale(l.scale,l.scale),r.drawImage(l.img,0,0),r.restore();const i=c.$cropBox[0].getBoundingClientRect(),a=s.getBoundingClientRect(),o=i.left-a.left,d=i.top-a.top,m=i.width,p=i.height;r.fillStyle="rgba(0,0,0,0.45)",r.fillRect(0,0,t,d),r.fillRect(0,d,o,p),r.fillRect(o+m,d,t-(o+m),p),r.fillRect(0,d+p,t,n-(d+p))}function $(){const e=c.$cropBox[0].getBoundingClientRect(),t=s.getBoundingClientRect(),n=e.left-t.left,i=e.top-t.top;t.width,t.height;return{srcX:(n-l.translate.x)/l.scale,srcY:(i-l.translate.y)/l.scale,srcW:e.width/l.scale,srcH:e.height/l.scale}}function C(){if(!l||!l.img)return;const e=$(),t=d.width,n=d.height;m.clearRect(0,0,t,n),m.fillStyle="#fff",m.fillRect(0,0,t,n),m.save(),m.drawImage(l.img,e.srcX,e.srcY,e.srcW,e.srcH,0,0,t,n),m.restore()}function z(){s.removeEventListener("mousedown",h),s.removeEventListener("touchstart",h),window.removeEventListener("mousemove",v),window.removeEventListener("touchmove",v),window.removeEventListener("mouseup",x),window.removeEventListener("touchend",x),s.removeEventListener("wheel",y),c.$zoom.off("input change",w),c.$overlay.fadeOut(120,(function(){})),l=null,"function"==typeof a.onClose&&a.onClose()}s.addEventListener("mousedown",h),s.addEventListener("touchstart",h,{passive:!1}),window.addEventListener("mousemove",v),window.addEventListener("touchmove",v,{passive:!1}),window.addEventListener("mouseup",x),window.addEventListener("touchend",x),s.addEventListener("wheel",y,{passive:!1}),c.$zoom.on("input change",w),c.$confirm.off("click").on("click",(async function(){c.$confirm.prop("disabled",!0).text("Processing...");try{const t=await async function(){if(!l||!l.img)return null;const e=$();let t=Math.max(0,e.srcX),o=Math.max(0,e.srcY),c=e.srcW,s=e.srcH;const r=a.outputWidth,d=a.outputHeight,m=document.createElement("canvas");m.width=r,m.height=d;const p=m.getContext("2d");p.fillStyle="image/png"===a.mimeType?"rgba(0,0,0,0)":"#fff",p.fillRect(0,0,r,d),p.drawImage(l.img,t,o,c,s,0,0,r,d);let u=a.quality,g=m.toDataURL(a.mimeType,u),f=n(g);if(a.maxFileSize&&f.size>a.maxFileSize){if("image/jpeg"===a.mimeType)for(;f.size>a.maxFileSize&&u>a.minQuality+.01;)u-=.06,g=m.toDataURL("image/jpeg",u),f=n(g);let e=0,i=r,p=d;for(;f.size>a.maxFileSize&&e<8;){e++,i=Math.max(1,Math.round(.9*i)),p=Math.max(1,Math.round(.9*p));const r=document.createElement("canvas");r.width=i,r.height=p;const d=r.getContext("2d");d.fillStyle="image/png"===a.mimeType?"rgba(0,0,0,0)":"#fff",d.fillRect(0,0,i,p),d.drawImage(l.img,t,o,c,s,0,0,i,p),g=r.toDataURL(a.mimeType,u),f=n(g)}}return{blob:f,dataURL:g,mimeType:a.mimeType,width:r,height:d,fileName:i||"cropped."+("image/png"===a.mimeType?"png":"jpg")}}(),o=c.$modal.data("triggerInput")||e("input[type=file]").first();if(o&&t&&t.blob){const e=new File([t.blob],t.fileName||"cropped.jpg",{type:t.mimeType||"image/jpeg"}),n=new DataTransfer;n.items.add(e),o[0].files=n.files,o[0].nextElementSibling&&"LABEL"===o[0].nextElementSibling.tagName?o[0].nextElementSibling.textContent=e.name:o.attr("title",e.name),console.log("Cropped file ready:",e)}"function"==typeof a.onComplete&&a.onComplete(t)}catch(e){console.error("Crop error",e)}finally{c.$confirm.prop("disabled",!1).text("Crop & Save"),z()}})),c.$cancel.off("click").on("click",z),c.$overlay.off("click").on("click",(function(e){e.target===c.$overlay[0]&&z()}))}return this.each((function(){const t=e(this);"file"!==t.attr("type")&&console.warn("imageCropper: target element is not a file input."),t.off("change.icp").on("change.icp",(function(e){const n=e.target.files;if(!n||!n.length)return;const i=n[0];if(!i.type.startsWith("image/"))return alert("Please select an image file."),void t.val("");let o=1048576,l=1*o;if(a.allowedMb&&(l=a.allowedMb*o),i.size>l)return alert(`Selected file is too large to upload or process. Required 1 MB, given ${(i.size/o).toFixed(1)}`),void t.val("");c(i,i.name),setTimeout((()=>t.val("")),0)}))})),this}}(jQuery);
+/*!
+ * jQuery Image Cropper (ICP)
+ * Full readable version
+ */
+
+(function ($) {
+    const defaults = {
+        outputWidth: 800,
+        outputHeight: 600,
+        aspectRatio: null,
+        maxFileSize: 95000,
+        allowedMb: 10,
+        mimeType: "image/jpeg",
+        quality: 0.92,
+        minQuality: 0.5,
+        maxDimension: 4000,
+        boundingBox: null,
+        onOpen: null,
+        onClose: null,
+        onComplete: null
+    };
+
+    // Convert Base64 DataURL to Blob
+    function dataURLtoBlob(dataURL) {
+        const parts = dataURL.split(",");
+        const mime = parts[0].match(/:(.*?);/)[1];
+        const binary = atob(parts[1]);
+        const len = binary.length;
+        const u8 = new Uint8Array(len);
+        for (let i = 0; i < len; i++) u8[i] = binary.charCodeAt(i);
+        return new Blob([u8], { type: mime });
+    }
+
+    $.fn.imageCropper = function (options) {
+        const settings = $.extend({}, defaults, options || {});
+        if (!settings.outputWidth || !settings.outputHeight) {
+            console.error("imageCropper: outputWidth and outputHeight must be specified.");
+            return this;
+        }
+
+        let modalElements = null;
+        let state = null;
+
+        // Create or reuse modal
+        function createModal() {
+            if (modalElements) return modalElements;
+
+            const $overlay = $('<div class="icp-overlay" style="display:none"></div>');
+            const $modal = $(`
+                <div class="icp-modal" role="dialog" aria-modal="true" aria-label="Image cropper">
+                    <div class="icp-header">
+                        <div>
+                            <div class="icp-title">Crop Image</div>
+                            <div class="icp-hint">Drag to pan; mousewheel to zoom; use slider to adjust zoom.</div>
+                        </div>
+                        <div>
+                            <button class="icp-btn secondary icp-cancel">Cancel</button>
+                            <button class="icp-btn icp-confirm">Crop & Save</button>
+                        </div>
+                    </div>
+                    <div class="icp-body">
+                        <div class="icp-canvas-wrap">
+                            <canvas class="icp-canvas"></canvas>
+                            <div class="icp-crop-box" aria-hidden="true"></div>
+                        </div>
+                        <div class="icp-controls">
+                            <div>
+                                <label>Zoom</label>
+                                <input type="range" class="icp-zoom" min="0.1" max="3" step="0.01" value="1">
+                            </div>
+                            <div>
+                                <label>Preview output size</label>
+                                <div class="icp-preview" style="border:1px solid #ddd; padding:6px; text-align:center;">
+                                    <canvas class="icp-preview-canvas" width="200" height="150" style="max-width:100%;height:auto"></canvas>
+                                </div>
+                            </div>
+                            <div style="margin-top:auto">
+                                <div style="font-size:13px;color:#444">Output: <span class="icp-output-size"></span></div>
+                                <div style="font-size:12px;color:#666;margin-top:6px">Format: <span class="icp-mime"></span></div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="icp-footer">
+                        <button class="icp-btn secondary icp-cancel2">Cancel</button>
+                        <button class="icp-btn icp-confirm2">Crop & Save</button>
+                    </div>
+                </div>
+            `);
+
+            $overlay.append($modal);
+            $("body").append($overlay);
+
+            modalElements = {
+                $overlay,
+                $modal,
+                $canvas: $modal.find(".icp-canvas"),
+                $cropBox: $modal.find(".icp-crop-box"),
+                $zoom: $modal.find(".icp-zoom"),
+                $previewCanvas: $modal.find(".icp-preview-canvas"),
+                $outputSize: $modal.find(".icp-output-size"),
+                $mime: $modal.find(".icp-mime"),
+                $confirm: $modal.find(".icp-confirm, .icp-confirm2"),
+                $cancel: $modal.find(".icp-cancel, .icp-cancel2")
+            };
+            return modalElements;
+        }
+
+        // Open cropper modal
+        function openCropper(file, fileName) {
+            const ui = createModal();
+            const canvas = ui.$canvas[0];
+            const ctx = canvas.getContext("2d");
+            const preview = ui.$previewCanvas[0];
+            const previewCtx = preview.getContext("2d");
+
+            state = {
+                img: new Image(),
+                imgNaturalWidth: 0,
+                imgNaturalHeight: 0,
+                translate: { x: 0, y: 0 },
+                scale: 1,
+                dragging: false,
+                lastPointer: null
+            };
+
+            ui.$mime.text(settings.mimeType);
+            ui.$outputSize.text(`${settings.outputWidth}px × ${settings.outputHeight}px`);
+
+            const reader = new FileReader();
+            reader.onload = (ev) => {
+                state.img.onload = function () {
+                    let iw = state.img.naturalWidth;
+                    let ih = state.img.naturalHeight;
+
+                    // Downscale if too large
+                    if (settings.maxDimension && Math.max(iw, ih) > settings.maxDimension) {
+                        const scale = settings.maxDimension / Math.max(iw, ih);
+                        iw = Math.round(iw * scale);
+                        ih = Math.round(ih * scale);
+                        const tempCanvas = document.createElement("canvas");
+                        tempCanvas.width = iw;
+                        tempCanvas.height = ih;
+                        tempCanvas.getContext("2d").drawImage(state.img, 0, 0, iw, ih);
+                        state.img = new Image();
+                        state.img.onload = setupCanvas;
+                        state.img.src = tempCanvas.toDataURL("image/png");
+                    } else {
+                        setupCanvas();
+                    }
+
+                    function setupCanvas() {
+                        state.imgNaturalWidth = iw;
+                        state.imgNaturalHeight = ih;
+                        const parentRect = ui.$canvas.parent()[0].getBoundingClientRect();
+                        const displayWidth = Math.max(300, Math.floor(parentRect.width));
+                        const displayHeight = Math.max(200, Math.floor(Math.min(parentRect.height, 0.6 * window.innerHeight)));
+                        const dpr = window.devicePixelRatio || 1;
+
+                        canvas.width = displayWidth * dpr;
+                        canvas.height = displayHeight * dpr;
+                        canvas.style.width = `${displayWidth}px`;
+                        canvas.style.height = `${displayHeight}px`;
+                        ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+                        ctx.imageSmoothingQuality = "high";
+
+                        state.scale = Math.min(displayWidth / iw, displayHeight / ih, 1);
+                        state.translate.x = (displayWidth - iw * state.scale) / 2;
+                        state.translate.y = (displayHeight - ih * state.scale) / 2;
+
+                        let cropW, cropH;
+                        if (settings.boundingBox) {
+                            cropW = settings.boundingBox.width;
+                            cropH = settings.boundingBox.height;
+                        } else {
+                            const ratio = settings.aspectRatio || (settings.outputWidth / settings.outputHeight);
+                            cropW = 0.8 * displayWidth;
+                            cropH = cropW / ratio;
+                            if (cropH > 0.8 * displayHeight) {
+                                cropH = 0.8 * displayHeight;
+                                cropW = cropH * ratio;
+                            }
+                        }
+
+                        ui.$cropBox.css({
+                            width: cropW + "px",
+                            height: cropH + "px",
+                            left: (displayWidth - cropW) / 2 + "px",
+                            top: (displayHeight - cropH) / 2 + "px"
+                        });
+
+                        ui.$zoom.attr({ min: 0.1, max: Math.max(3, 5 * state.scale) }).val(state.scale);
+
+                        renderMain();
+                        renderPreview();
+                    }
+                };
+                state.img.src = ev.target.result;
+            };
+            reader.readAsDataURL(file);
+
+            ui.$overlay.fadeIn(100);
+            if (typeof settings.onOpen === "function") settings.onOpen();
+
+            // === Interactions ===
+            function pointerPos(evt) {
+                if (evt.touches && evt.touches.length) return { x: evt.touches[0].clientX, y: evt.touches[0].clientY };
+                return { x: evt.clientX, y: evt.clientY };
+            }
+            function canvasOffsetPos(x, y) {
+                const rect = canvas.getBoundingClientRect();
+                return { x: x - rect.left, y: y - rect.top };
+            }
+            function startDrag(e) { e.preventDefault(); state.dragging = true; state.lastPointer = canvasOffsetPos(pointerPos(e).x, pointerPos(e).y); }
+            function moveDrag(e) { if (!state.dragging) return; e.preventDefault(); const now = canvasOffsetPos(pointerPos(e).x, pointerPos(e).y); state.translate.x += now.x - state.lastPointer.x; state.translate.y += now.y - state.lastPointer.y; state.lastPointer = now; renderMain(); renderPreview(); }
+            function stopDrag() { state.dragging = false; }
+            function onWheel(e) { e.preventDefault(); const factor = e.deltaY < 0 ? 1.08 : 0.92; const p = canvasOffsetPos(pointerPos(e).x, pointerPos(e).y); const old = state.scale; const newScale = Math.max(parseFloat(ui.$zoom.attr("min")), Math.min(parseFloat(ui.$zoom.attr("max")), old * factor)); const dx = (p.x - state.translate.x) / old; const dy = (p.y - state.translate.y) / old; state.scale = newScale; state.translate.x = p.x - dx * newScale; state.translate.y = p.y - dy * newScale; ui.$zoom.val(state.scale); renderMain(); renderPreview(); }
+            function zoomSlider() { const val = parseFloat(ui.$zoom.val()); const cropRect = ui.$cropBox[0].getBoundingClientRect(); const canvasRect = canvas.getBoundingClientRect(); const centerX = (cropRect.left + cropRect.right) / 2 - canvasRect.left; const centerY = (cropRect.top + cropRect.bottom) / 2 - canvasRect.top; const oldScale = state.scale; const dx = (centerX - state.translate.x) / oldScale; const dy = (centerY - state.translate.y) / oldScale; state.scale = val; state.translate.x = centerX - dx * val; state.translate.y = centerY - dy * val; renderMain(); renderPreview(); }
+
+            function renderMain() {
+                const dpr = window.devicePixelRatio || 1;
+                const w = canvas.width / dpr;
+                const h = canvas.height / dpr;
+                ctx.clearRect(0, 0, w, h);
+                ctx.fillStyle = "#222";
+                ctx.fillRect(0, 0, w, h);
+                ctx.save();
+                ctx.translate(state.translate.x, state.translate.y);
+                ctx.scale(state.scale, state.scale);
+                ctx.drawImage(state.img, 0, 0);
+                ctx.restore();
+
+                const cropRect = ui.$cropBox[0].getBoundingClientRect();
+                const canvasRect = canvas.getBoundingClientRect();
+                const x = cropRect.left - canvasRect.left;
+                const y = cropRect.top - canvasRect.top;
+                const cw = cropRect.width;
+                const ch = cropRect.height;
+
+                ctx.fillStyle = "rgba(0,0,0,0.45)";
+                ctx.fillRect(0, 0, w, y);
+                ctx.fillRect(0, y, x, ch);
+                ctx.fillRect(x + cw, y, w - (x + cw), ch);
+                ctx.fillRect(0, y + ch, w, h - (y + ch));
+            }
+
+            function getCropRect() {
+                const cropRect = ui.$cropBox[0].getBoundingClientRect();
+                const canvasRect = canvas.getBoundingClientRect();
+                const srcX = (cropRect.left - canvasRect.left - state.translate.x) / state.scale;
+                const srcY = (cropRect.top - canvasRect.top - state.translate.y) / state.scale;
+                const srcW = cropRect.width / state.scale;
+                const srcH = cropRect.height / state.scale;
+                return { srcX, srcY, srcW, srcH };
+            }
+
+            function renderPreview() {
+                const rect = getCropRect();
+                const pw = preview.width;
+                const ph = preview.height;
+                previewCtx.clearRect(0, 0, pw, ph);
+                previewCtx.fillStyle = "#fff";
+                previewCtx.fillRect(0, 0, pw, ph);
+                previewCtx.drawImage(state.img, rect.srcX, rect.srcY, rect.srcW, rect.srcH, 0, 0, pw, ph);
+            }
+
+            function closeCropper() {
+                canvas.removeEventListener("mousedown", startDrag);
+                canvas.removeEventListener("touchstart", startDrag);
+                window.removeEventListener("mousemove", moveDrag);
+                window.removeEventListener("touchmove", moveDrag);
+                window.removeEventListener("mouseup", stopDrag);
+                window.removeEventListener("touchend", stopDrag);
+                canvas.removeEventListener("wheel", onWheel);
+                ui.$zoom.off("input change", zoomSlider);
+                ui.$overlay.fadeOut(120);
+                state = null;
+                if (typeof settings.onClose === "function") settings.onClose();
+            }
+
+            canvas.addEventListener("mousedown", startDrag);
+            canvas.addEventListener("touchstart", startDrag, { passive: false });
+            window.addEventListener("mousemove", moveDrag);
+            window.addEventListener("touchmove", moveDrag, { passive: false });
+            window.addEventListener("mouseup", stopDrag);
+            window.addEventListener("touchend", stopDrag);
+            canvas.addEventListener("wheel", onWheel, { passive: false });
+            ui.$zoom.on("input change", zoomSlider);
+            ui.$cancel.off("click").on("click", closeCropper);
+            ui.$overlay.off("click").on("click", (e) => { if (e.target === ui.$overlay[0]) closeCropper(); });
+
+            ui.$confirm.off("click").on("click", async function () {
+                ui.$confirm.prop("disabled", true).text("Processing...");
+                try {
+                    const cropped = await cropAndCompress();
+                    const input = ui.$modal.data("triggerInput") || $("input[type=file]").first();
+                    if (input && cropped && cropped.blob) {
+                        const file = new File([cropped.blob], cropped.fileName, { type: cropped.mimeType });
+                        const dt = new DataTransfer();
+                        dt.items.add(file);
+                        input[0].files = dt.files;
+                        if (input[0].nextElementSibling?.tagName === "LABEL") input[0].nextElementSibling.textContent = file.name;
+                        else input.attr("title", file.name);
+                    }
+                    if (typeof settings.onComplete === "function") settings.onComplete(cropped);
+                } catch (err) { console.error("Crop error", err); }
+                finally { ui.$confirm.prop("disabled", false).text("Crop & Save"); closeCropper(); }
+            });
+
+            async function cropAndCompress() {
+                if (!state || !state.img) return null;
+                const rect = getCropRect();
+                const outW = settings.outputWidth;
+                const outH = settings.outputHeight;
+                const outCanvas = document.createElement("canvas");
+                outCanvas.width = outW;
+                outCanvas.height = outH;
+                const outCtx = outCanvas.getContext("2d");
+                outCtx.fillStyle = settings.mimeType === "image/png" ? "rgba(0,0,0,0)" : "#fff";
+                outCtx.fillRect(0, 0, outW, outH);
+                outCtx.drawImage(state.img, rect.srcX, rect.srcY, rect.srcW, rect.srcH, 0, 0, outW, outH);
+
+                let quality = settings.quality;
+                let dataURL = outCanvas.toDataURL(settings.mimeType, quality);
+                let blob = dataURLtoBlob(dataURL);
+
+                if (settings.maxFileSize && blob.size > settings.maxFileSize) {
+                    if (settings.mimeType === "image/jpeg") {
+                        while (blob.size > settings.maxFileSize && quality > settings.minQuality + 0.01) {
+                            quality -= 0.06;
+                            dataURL = outCanvas.toDataURL("image/jpeg", quality);
+                            blob = dataURLtoBlob(dataURL);
+                        }
+                    }
+
+                    // Resize loop if still too big
+                    let attempt = 0, w = outW, h = outH;
+                    while (blob.size > settings.maxFileSize && attempt < 8) {
+                        attempt++;
+                        w = Math.round(w * 0.9);
+                        h = Math.round(h * 0.9);
+                        outCanvas.width = w;
+                        outCanvas.height = h;
+                        outCtx.fillStyle = settings.mimeType === "image/png" ? "rgba(0,0,0,0)" : "#fff";
+                        outCtx.fillRect(0, 0, w, h);
+                        outCtx.drawImage(state.img, rect.srcX, rect.srcY, rect.srcW, rect.srcH, 0, 0, w, h);
+                        dataURL = outCanvas.toDataURL(settings.mimeType, quality);
+                        blob = dataURLtoBlob(dataURL);
+                    }
+                }
+
+                return {
+                    blob,
+                    dataURL,
+                    fileName: fileName || "cropped." + (settings.mimeType === "image/jpeg" ? "jpg" : "png"),
+                    mimeType: settings.mimeType,
+                    width: outCanvas.width,
+                    height: outCanvas.height
+                };
+            }
+        }
+
+        // Bind to input elements
+        return this.each(function () {
+            const $input = $(this);
+            $input.on("change", function () {
+                const file = this.files[0];
+                if (!file) return;
+                if (file.size > settings.allowedMb * 1024 * 1024) { alert("File too large!"); return; }
+                createModal().$modal.data("triggerInput", $input);
+                openCropper(file, file.name);
+            });
+        });
+    };
+})(jQuery);

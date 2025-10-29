@@ -1,11 +1,25 @@
 $(document).ready(function(){
 
     if ($('#frmEmployeeAttendanceEntryStore').length > 0) {
+        $('#image').imageCropper({
+            outputWidth: 1024,
+            outputHeight: 1024,
+            mimeType: 'image/jpeg',
+            boundingBox: { width: 250, height: 250 },
+            quality: .5
+        });
        sendTiming('frmEmployeeAttendanceEntryStore', 'in')
     }
 
     if ($('#frmEmployeeAttendanceSignOut').length > 0) {
-       sendTiming('frmEmployeeAttendanceSignOut', 'out')
+        $('#out_image').imageCropper({
+            outputWidth: 1024,
+            outputHeight: 1024,
+            mimeType: 'image/jpeg',
+            boundingBox: { width: 250, height: 250 },
+            quality: .5
+        });
+        sendTiming('frmEmployeeAttendanceSignOut', 'out')
     }
 
 });

@@ -16,9 +16,11 @@
                     <input type="file" class="form-control" name="image" id="image" accept="*">
                 </div>
             </div>
+            @if($data['att'] == null)
             <div class="mb-3 mt-3 text-end">
-                <button class="btn btn-primary btn-sm" type="submit">{{pxLang($data['lang'],'module.in_time.btn_entry')}} </button>
+                <button class="btn btn-primary btn-sm w-100" type="submit">{{pxLang($data['lang'],'module.in_time.btn_entry')}} </button>
             </div>
+            @endif
         </div>
     </form>
 </div>

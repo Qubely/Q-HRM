@@ -27,7 +27,7 @@ return [
         'in_time' => [
             'name' => 'In Time',
             'image' => 'Location Image',
-            'btn_entry' => 'Enroll'
+            'btn_entry' => 'Sign In'
         ],
         'out_time' => [
             'name' => 'Out Time',

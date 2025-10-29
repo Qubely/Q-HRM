@@ -29,6 +29,8 @@ class ValidateEmployeeAttendanceEntryStore extends FormRequest
     public function rules(): array
     {
         return [
+            'image' => 'nullable|file|mimes:png,jpg|max:1024',
+            'out_image' => 'nullable|file|mimes:png,jpg|max:1024',
             'employee_id' => 'required|exists:employees,id',
             'latitude' => 'required|numeric',
             'longitude' => 'required|numeric',

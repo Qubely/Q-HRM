@@ -4,6 +4,7 @@ namespace App\Repositories\Employee\Attendance\Entry\Form\Store;
 
 use App\Models\Employee;
 use App\Models\EmployeeAttendance;
+use App\Models\EmployeeAttendanceHistory;
 use App\Repositories\BaseRepository;
 use App\Traits\BaseTrait;
 use Illuminate\Http\JsonResponse;
@@ -12,6 +13,7 @@ use Carbon\Carbon;
 use Illuminate\Support\Facades\Validator;
 use Response;
 use Auth;
+use File;
 class  EmployeeAttendanceEntryStoreRepository extends BaseRepository implements IEmployeeAttendanceEntryStoreRepository {
 
     use BaseTrait;
@@ -58,42 +60,39 @@ class  EmployeeAttendanceEntryStoreRepository extends BaseRepository implements 
         $today = Carbon::now()->format('Y-m-d');
         $nowTime =  Carbon::now()->format('H:i:s');
         try {
+            DB::beginTransaction();
             $ex = EmployeeAttendance::where([['employee_id','=',$employee->id],['att_date','=', $today]])->first();
             if(empty($ex)) {
-                $attendance = EmployeeAttendance::firstOrCreate(
-                    [
-                        'employee_id' => $employee->id,
-                        'att_date' => $today,
-                    ],
-                    [
-                        'in_time' => $nowTime,
-                        'longitude_in' => $request->longitude,
-                        'latitude_in' => $request->latitude,
-                        'status' => 'present',
-                    ]
-                );
-                if (is_null($attendance->in_time)) {
-                    $attendance->in_time = $nowTime;
-                    $attendance->status = 'present';
-                    $attendance->save();
+                $ex = new EmployeeAttendance;
+                $ex->employee_id = $employee->id;
+                $ex->att_date = $today;
+                $ex->in_time = $nowTime;
+                $ex->longitude_in = $request->longitude;
+                $ex->latitude_in = $request->latitude;
+                $path = imagePaths()['dyn_image'];
+                $image = $request->file('image');
+                if ($request->hasFile('image')) {
+                    $originalName = $image->getClientOriginalName();
+                    $extension = pathinfo($originalName, PATHINFO_EXTENSION);
+                    $filename = time() . '_.' . $extension;
+                    $image->move($path, $filename);
+                    $ex->in_image = $filename;
                 }
-
-            }  else {
-
-                if($ex->device_id == null) {
-                    $ex->device_id = 'user';
-                    $ex->status = 'present';
-                    $ex->in_time =  $nowTime;
-                    $ex->longitude_in =  $request->longitude;
-                    $ex->latitude_in =  $request->latitude;
-                    $ex->save();
-                }
+                $ex->status = 'present';
+                $ex->save();
+                $h = new EmployeeAttendanceHistory;
+                $h->employee_attendance_id = $ex->id;
+                $h->type = 'in-time';
+                $h->time =  $nowTime;
+                $h->save();
             }
+            DB::commit();
             $response['extraData'] = [
                 'inflate' => pxLang($request->lang,'','common.action_success')
             ];
             return $this->response(['type' => 'success', 'data' => $response]);
         } catch (\Exception $e) {
+            DB::rollback();
             $this->saveError($this->getSystemError(['name' => 'employee_attendance_store_error']), $e);
             return $this->response(['type' => 'wrong', 'lang' => 'server_wrong '.$e->getMessage()]);
         }
@@ -125,6 +124,19 @@ class  EmployeeAttendanceEntryStoreRepository extends BaseRepository implements 
             $ex->out_time =  $nowTime;
             $ex->longitude_in =  $request->longitude;
             $ex->latitude_in =  $request->latitude;
+            $path = imagePaths()['dyn_image'];
+            $old = $path.'/'.$ex?->out_image;
+            if(file_exists($old)) {
+                File::delete($old);
+            }
+            $image = $request->file('out_image');
+            if ($request->hasFile('out_image')) {
+                $originalName = $image->getClientOriginalName();
+                $extension = pathinfo($originalName, PATHINFO_EXTENSION);
+                $filename = time() . '_.' . $extension;
+                $image->move($path, $filename);
+                $ex->out_image = $filename;
+            }
             $ex->save();
             $response['extraData'] = ['inflate' => pxLang($request->lang,'','common.action_success')];
             return $this->response(['type' => 'success', 'data' => $response]);
