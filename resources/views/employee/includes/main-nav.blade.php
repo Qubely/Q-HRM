@@ -45,7 +45,7 @@
                             <a href="javascript: void(0);" class="has-arrow waves-effect">{{pxLang('employee.main-nav','attendance.menu.report')}}</a>
                             <ul class="sub-menu" aria-expanded="true">
                                 <li>
-                                    <a href="{{url('')}}">{{pxLang('employee.main-nav','attendance.menu.report.monthly')}}</a>
+                                    <a href="{{url('employee/attendance/report/monthly/details')}}">{{pxLang('employee.main-nav','attendance.menu.report.monthly')}}</a>
                                 </li>
                             </ul>
                         </li>

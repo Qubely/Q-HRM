@@ -1,5 +1,7 @@
 $(document).ready(function(){
 
+    PX?.utils?.fixHeight('fix-att-card','fix-att-card',0,7);
+
     if ($('#frmEmployeeAttendanceEntryStore').length > 0) {
         $('#image').imageCropper({
             outputWidth: 1024,

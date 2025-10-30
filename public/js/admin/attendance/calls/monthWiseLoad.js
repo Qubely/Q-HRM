@@ -1,4 +1,5 @@
 $(document).ready(function(){
+
     if ($('#frmLoadMonthWise').length > 0) {
         PX?.utils?.dp('dp',{format: 'Y-m-d'});
         let rules = {
