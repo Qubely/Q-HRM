@@ -12,7 +12,7 @@
                     </div>
                 </div>
                 <h4 class="text-uppercase mt-4">No items yet ! </h4>
-                <p class="text-muted">You can ad items by clicking add new button </p>
+                <p class="text-muted">You can add items by clicking add new button </p>
             </div>
         </div>
     </div>

@@ -43,6 +43,10 @@ class MonthWiseLoadRepository extends BaseRepository implements IMonthWiseLoadRe
             $q->where([['att_date','>=',$from_date],['att_date','<=',$to_date]])->select(['id','employee_id','att_date','in_time','out_time']);
         }])->select(['id','name','employee_id'])->find($request->employee_id);
         $data['dates'] = $this->createPriod($from_date,$to_date, $data['item']?->attendances);
+        $data['lastSevenDays'] = [];
+        for ($i = 6; $i >= 0; $i--) {
+           $data['lastSevenDays'][]  = Carbon::now()->subDays($i)->format('Y-m-d');
+        }
         return $data;
     }
 

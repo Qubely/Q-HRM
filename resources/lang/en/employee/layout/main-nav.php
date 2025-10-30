@@ -8,7 +8,7 @@ return [
     'system.core.user_policy' => 'User Policies',
     'attendance.menu' => 'Attendance',
     'attendance.menu.entry' => 'Today',
-    'attendance.menu.my_attendance' => 'My Attendance',
+    'attendance.menu.my_attendance' => 'Enroll',
     'attendance.menu.reconciliation' => 'Reconciliation',
     'attendance.menu.report' => 'Reports',
     'attendance.menu.report.monthly' => 'Attendance History',
