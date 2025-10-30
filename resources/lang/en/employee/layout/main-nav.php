@@ -9,4 +9,7 @@ return [
     'attendance.menu' => 'Attendance',
     'attendance.menu.entry' => 'Today',
     'attendance.menu.my_attendance' => 'My Attendance',
+    'attendance.menu.reconciliation' => 'Reconciliation',
+    'attendance.menu.report' => 'Reports',
+    'attendance.menu.report.monthly' => 'Monthly Attendance',
 ];

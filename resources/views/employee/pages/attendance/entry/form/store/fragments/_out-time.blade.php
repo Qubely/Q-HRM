@@ -2,7 +2,7 @@
 <div class="time-card">
     <i class="fa-solid fa-clock"></i>
     <h1 id="time-in" class="time-title"> {{ ($data['att'] && $data['att']->out_time != null) ? date('h:i A', strtotime($data['att']->out_time)) : '-:-' }}</h1>
-    <p>Attendance Time-out</p>
+    <p>{{pxLang($data['lang'],'text.out_time')}}</p>
 </div>
  <form id="frmEmployeeAttendanceSignOut" autocomplete="off">
     <input type="hidden" value="{{Auth::user()->id}}" id="employee_id" name="employee_id"/>

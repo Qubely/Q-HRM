@@ -36,10 +36,18 @@
                     </a>
                     <ul class="sub-menu" aria-expanded="true">
                         <li>
-                            <a href="{{url('employee/attendance/entry/store')}}">{{pxLang('employee.main-nav','attendance.menu.entry')}}</a>
+                            <a href="{{url('employee/attendance/entry/store')}}">{{pxLang('employee.main-nav','attendance.menu.my_attendance')}}</a>
+                        </li>
+                         <li>
+                            <a href="{{url('')}}">{{pxLang('employee.main-nav','attendance.menu.reconciliation')}}</a>
                         </li>
                         <li>
-                            <a href="{{url('employee/atteandance/my-attendance')}}">{{pxLang('employee.main-nav','attendance.menu.my_attendance')}}</a>
+                            <a href="javascript: void(0);" class="has-arrow waves-effect">{{pxLang('employee.main-nav','attendance.menu.report')}}</a>
+                            <ul class="sub-menu" aria-expanded="true">
+                                <li>
+                                    <a href="{{url('')}}">{{pxLang('employee.main-nav','attendance.menu.report.monthly')}}</a>
+                                </li>
+                            </ul>
                         </li>
                     </ul>
                 </li>

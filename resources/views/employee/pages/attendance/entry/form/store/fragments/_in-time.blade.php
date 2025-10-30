@@ -4,7 +4,7 @@
 <div class="time-card">
     <i class="fa-solid fa-clock"></i>
     <h1 id="time-in" class="time-title"> {{ ($data['att'] && $data['att']->in_time != null) ? date('h:i A', strtotime($data['att']->in_time)) : '-:-' }}</h1>
-    <p>Attendance Time-in</p>
+    <p>{{pxLang($data['lang'],'text.in_time')}}</p>
 </div>
 <div class="mt-3">
     <form id="frmEmployeeAttendanceEntryStore" autocomplete="off">
