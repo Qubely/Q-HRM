@@ -8,6 +8,8 @@ use App\Traits\BaseTrait;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Auth;
+use Illuminate\Contracts\View\View;
+
 class AttendanceDetailsController extends Controller
 {
     use BaseTrait;
@@ -20,7 +22,13 @@ class AttendanceDetailsController extends Controller
         });
     }
 
-    public function index(Request $request)
+    /**
+     * Index page for employee attendance report
+     *
+     * @param Request $request
+     * @return View
+     */
+    public function index(Request $request) : View
     {
         $request->merge([
             'from_date'   => Carbon::now()->startOfMonth()->format('Y-m-d'),
