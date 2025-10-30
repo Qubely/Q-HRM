@@ -28,7 +28,8 @@ class  EmployeeLeaveCrudRepository extends BaseRepository implements IEmployeeLe
      */
     public function index($request,$id=null) : array
     {
-       return $this->getPageDefault(model: $this->EmployeeLeave, id: $id);
+        $where = [['employee_id','=',$request->employee_id]];
+        return $this->getPageDefault(model: $this->EmployeeLeave, id: $id,where: $where);
     }
 
 

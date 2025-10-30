@@ -28,7 +28,8 @@ class  EmployeeEducationCrudRepository extends BaseRepository implements IEmploy
      */
     public function index($request,$id=null) : array
     {
-       return $this->getPageDefault(model: $this->EmployeeEducation, id: $id);
+       $where = [['employee_id','=',$request?->employee_id]];
+       return $this->getPageDefault(model: $this->EmployeeEducation, id: $id,where: $where);
     }
 
 

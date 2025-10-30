@@ -32,9 +32,11 @@ class EmployeeLeaveCrudController  extends Controller {
      */
     public function index(Request $request) : View
     {
+        $employee =  Employee::where([['uuid','=',$request->uuid]])->first();
+        $request->merge(['employee_id' => $employee?->id]);
         $data = $this->iEmployeeLeaveCrudRepo->index($request);
         $data['lang'] = $this->lang;
-        $data['employee'] = Employee::where([['uuid','=',$request->uuid]])->first();
+        $data['employee'] = $employee;
         $data['leaves'] = $this->leaves;
         return view('admin.pages.employee.draft.crud.leave.crud.index',compact('data'));
     }

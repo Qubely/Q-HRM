@@ -34,9 +34,11 @@ class EmployeeEducationCrudController  extends Controller {
      */
     public function index(Request $request) : View
     {
+        $employee = Employee::where([['uuid','=',$request->uuid]])->first();
+        $request->merge(['employee_id' => $employee?->id]);
         $data = $this->iEmployeeEducationCrudRepo->index($request);
         $data['lang'] = $this->lang;
-        $data['employee'] = Employee::where([['uuid','=',$request->uuid]])->first();
+        $data['employee'] = $employee;
         $data['boards'] = $this->boards;
         $data['dgrees'] = $this->dgrees;
         return view('admin.pages.employee.draft.crud.education.crud.index',compact('data'));
