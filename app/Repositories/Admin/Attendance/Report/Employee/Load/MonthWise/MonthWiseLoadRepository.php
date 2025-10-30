@@ -61,7 +61,7 @@ class MonthWiseLoadRepository extends BaseRepository implements IMonthWiseLoadRe
             $att_date = $date->format('Y-m-d');
             $att = $attendances?->where('att_date',$att_date)->first();
             $dates[] = [
-                'view' => $date->format('d M'),
+                'view' => $date->format('d M')." (".$date->format('D').")",
                 'att_date' => $att_date,
                 'has' => ($att == null) ? false : true,
                 'in_time' =>  ($att != null &&  $att?->in_time != null) ? Carbon::parse($att?->in_time)->format('h:i A') : '-',
