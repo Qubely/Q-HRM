@@ -38,7 +38,7 @@
                         <li>
                             <a href="{{url('employee/attendance/entry/store')}}">{{pxLang('employee.main-nav','attendance.menu.my_attendance')}}</a>
                         </li>
-                         <li>
+                        <li>
                             <a href="{{url('')}}">{{pxLang('employee.main-nav','attendance.menu.reconciliation')}}</a>
                         </li>
                         <li>
