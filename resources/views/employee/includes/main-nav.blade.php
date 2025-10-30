@@ -39,7 +39,7 @@
                             <a href="{{url('employee/attendance/entry/store')}}">{{pxLang('employee.main-nav','attendance.menu.my_attendance')}}</a>
                         </li>
                         <li>
-                            <a href="{{url('')}}">{{pxLang('employee.main-nav','attendance.menu.reconciliation')}}</a>
+                            <a href="{{url('employee/attendance/reconciliation/recon-history/list')}}">{{pxLang('employee.main-nav','attendance.menu.reconciliation')}}</a>
                         </li>
                         <li>
                             <a href="javascript: void(0);" class="has-arrow waves-effect">{{pxLang('employee.main-nav','attendance.menu.report')}}</a>

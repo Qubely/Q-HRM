@@ -165,6 +165,7 @@ return [
         'employee.system.user' => 'employee/system/user/index',
         'employee.attendance.entry.form.store' => 'employee/attendance/entry/form/store/index',
         'employee.attendance.report.monthly.details' => 'employee/attendance/report/monthly/details/index',
-        'admin.attendance.report.employee.load' => 'admin/attendance/report/employee/load/index'
+        'admin.attendance.report.employee.load' => 'admin/attendance/report/employee/load/index',
+        'employee.attendance.reconciliation.crud' => 'employee/attendance/reconciliation/crud/index'
     ]
 ];
