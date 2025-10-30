@@ -1,7 +1,7 @@
 @if($data['item'] != null)
 <div class="card rounded page-block p-3" id="print">
     <div class="d-flex flex-row justify-content-start">
-        <h4 class="me-auto"> Attendace Repost for  {{$data['item']?->name}} | Date: {{$data['from_date']}} - {{$data['to_date']}}</h4>
+        <h4 class="me-auto"> Attendace Report for  {{$data['item']?->name}} | Date: {{$data['from_date']}} - {{$data['to_date']}}</h4>
         <span class="card p-1 cursor-pointer bg-info text-white d-print-none" id="trigPrint">
             <i class="fa fa-print"></i>
         </span>
