@@ -43,7 +43,7 @@ $(document).ready(function(){
                 class: 'text-end',
                 render: function (data, type, row) {
                     let str = ``;
-                    if(data?.status == 'Pending') {
+                    if(data?.status_raw == 'Pending') {
                         str += `<span data-id='${data?.id}' class="btn btn-outline-success btn-sm edit approveRecon" title="Approve">
                             <i class="fas fa-check"></i>
                         </span>
@@ -69,12 +69,27 @@ function dtEmployeeRecon(table, api, op) {
     $(".banRecon").on("click",function(){
         let id = $(this).attr('data-id');
         PX?.ajaxRequest({
-               element: 'elment',
+               element: 'banRecon',
                dataType: 'json',
                body: {id},
                confirm: true,
                type: 'request',
                script: 'admin/attendance/reconciliation/employee-recon/list/ban',
+               afterSuccess: {
+                   type: 'inflate_redirect_response_data',
+               }
+        });
+    });
+
+    $(".approveRecon").on("click",function(){
+        let id = $(this).attr('data-id');
+        PX?.ajaxRequest({
+               element: 'approveRecon',
+               dataType: 'json',
+               body: {id},
+               confirm: true,
+               type: 'request',
+               script: 'admin/attendance/reconciliation/employee-recon/list/aprove',
                afterSuccess: {
                    type: 'inflate_redirect_response_data',
                }

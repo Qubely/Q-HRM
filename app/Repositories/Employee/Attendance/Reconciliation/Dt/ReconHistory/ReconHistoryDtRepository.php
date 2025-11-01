@@ -39,7 +39,7 @@ class ReconHistoryDtRepository extends BaseRepository implements IReconHistoryDt
      */
     public function list($request) : JsonResponse
     {
-        $model = EmployeeAttendanceRecon::where([['employee_id','=',$request?->auth?->id]])->with(['att']);
+        $model = EmployeeAttendanceRecon::where([['employee_id','=',$request?->auth?->id]])->with(['att'])->orderBy('id','DESC');
         $this->saveTractAction(
             $this->getTrackData(
                 title: 'EmployeeAttendanceRecon was viewed by '.$request?->auth?->name.' at '.Carbon::now()->format('d M Y H:i:s A'),

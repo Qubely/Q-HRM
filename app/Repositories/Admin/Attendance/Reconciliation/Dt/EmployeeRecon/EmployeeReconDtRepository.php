@@ -8,6 +8,7 @@ use App\Traits\BaseTrait;
 use Carbon\Carbon;
 use DataTables;
 use Illuminate\Http\JsonResponse;
+use DB;
 class EmployeeReconDtRepository extends BaseRepository implements IEmployeeReconDtRepository {
 
     use BaseTrait;
@@ -35,7 +36,7 @@ class EmployeeReconDtRepository extends BaseRepository implements IEmployeeRecon
      */
     public function list($request) : JsonResponse
     {
-        $model = EmployeeAttendanceRecon::query();
+        $model = EmployeeAttendanceRecon::orderBy('id','DESC');
         $this->saveTractAction(
             $this->getTrackData(
                 title: 'EmployeeAttendanceRecon was viewed by '.$request?->auth?->name.' at '.Carbon::now()->format('d M Y H:i:s A'),
@@ -62,6 +63,9 @@ class EmployeeReconDtRepository extends BaseRepository implements IEmployeeRecon
         ->editColumn('out_time', function($item) {
             return  ($item?->out_time == null) ? '-' : Carbon::parse($item?->out_time)->format('h:i A');
         })
+        ->addColumn('status_raw',function($item){
+            return $item?->status;
+        })
         ->escapeColumns([])
         ->make(true);
     }
@@ -78,15 +82,52 @@ class EmployeeReconDtRepository extends BaseRepository implements IEmployeeRecon
         if(empty($req)) {
             return $this->response(['type'=>'noUpdate','title'=> pxLang('','','common.page_not_found')]);
         }
+        DB::beginTransaction();
         try {
             $req->status = 'Declined';
             $req->save();
+            $this->saveTractAction($this->getTrackData(title: "EmployeeAttendanceRecon was declined by ".$request?->auth?->name,request: $request));
             $response['extraData'] = [ 'inflate' => pxLang('','','common.action_success') ];
+            DB::commit();
             return $this->response(['type' => 'success', 'data' => $response]);
         } catch (\Exception $e) {
+            DB::rollback();
             $this->saveError($this->getSystemError(['name' => 'UqProfession_store_error']), $e);
             return $this->response(['type' => 'wrong', 'lang' => 'server_wrong']);
         }
 
     }
+
+
+    /**
+     * Approve reconciliated
+     *
+     * @param Request $request
+     * @return JsonResponse
+     */
+    public function aprove($request) : JsonResponse
+    {
+        $req = EmployeeAttendanceRecon::find($request->id);
+        if(empty($req)) {
+            return $this->response(['type'=>'noUpdate','title'=> pxLang('','','common.page_not_found')]);
+        }
+        DB::beginTransaction();
+        try {
+            $req->status = 'Approved';
+            $req->save();
+            $req->att->in_time = $req->in_time;
+            $req->att->out_time = $req->out_time;
+            $req->att->save();
+            $this->saveTractAction($this->getTrackData(title: "EmployeeAttendanceRecon was approved by ".$request?->auth?->name,request: $request));
+            DB::commit();
+            $response['extraData'] = [ 'inflate' => pxLang('','','common.action_success') ];
+            return $this->response(['type' => 'success', 'data' => $response]);
+        } catch (\Exception $e) {
+            DB::rollback();
+            $this->saveError($this->getSystemError(['name' => 'UqProfession_store_error']), $e);
+            return $this->response(['type' => 'wrong', 'lang' => 'server_wrong']);
+        }
+    }
+
+
 }

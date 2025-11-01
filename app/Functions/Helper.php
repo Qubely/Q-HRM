@@ -43,7 +43,7 @@ function getPolicyKey($Str,$key) {
 function getReconStatus($item){
     switch ($item?->status) {
         case 'Pending':
-            return '<span class="badge bg-waning"> Pending </span>';
+            return '<span class="badge bg-warning"> Pending </span>';
             break;
         case 'Declined':
             return '<span class="badge bg-danger"> Declined </span>';

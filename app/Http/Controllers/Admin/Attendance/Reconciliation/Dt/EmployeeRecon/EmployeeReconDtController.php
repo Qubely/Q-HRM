@@ -55,4 +55,17 @@ class EmployeeReconDtController extends Controller {
         return  $this->iEmployeeReconDtRepo->ban($request);
     }
 
+    /**
+     * Approve reconciliated
+     *
+     * @param Request $request
+     * @return JsonResponse
+     */
+    public function aprove(Request $request) : JsonResponse
+    {
+        return  $this->iEmployeeReconDtRepo->aprove($request);
+    }
+
+
+
 }
