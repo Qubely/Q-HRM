@@ -9,10 +9,29 @@ $(document).ready(function(){
                 title: table?.id
             },
             {
-                data: 'name',
-                title: table?.name
+                data: 'att.in_time',
+                title: table?.in_time
             },
-
+            {
+                data: 'att.out_time',
+                title: table?.out_time
+            },
+            {
+                data: 'in_time',
+                title: table?.in_time_recon
+            },
+            {
+                data: 'out_time',
+                title: table?.out_time_recon
+            },
+            {
+                data: 'reason',
+                title: table?.reason
+            },
+            {
+                data: 'status',
+                title: table?.status
+            },
             {
                 data: 'created_at',
                 title: table?.created
@@ -23,9 +42,7 @@ $(document).ready(function(){
                 title: table?.action,
                 class: 'text-end',
                 render: function (data, type, row) {
-                    return `<span class="btn btn-outline-secondary btn-sm edit" title="Edit">
-                        <i class="fas fa-pencil-alt"></i>
-                    </span>`;
+                    return ``;
                 }
             },
         ];

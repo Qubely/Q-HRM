@@ -19,6 +19,12 @@ return [
     'table' => [
         'id' => 'ID',
         'name' => 'Name',
+        'in_time' => 'Original In Time',
+        'out_time' => 'Original Out Time',
+        'in_time_recon' => 'Reconciliate In Time',
+        'out_time_recon' => 'Reconciliate Out Time',
+        'reason' => 'Reason',
+        'status' => 'Status',
         'created' => 'Created',
         'actions' => 'Actions',
     ]
