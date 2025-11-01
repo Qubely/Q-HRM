@@ -23,4 +23,6 @@ return [
     'data-library.menu.bank' => 'Banks',
     'data-library.menu.salary-setup.heads' => 'Salary Heads',
     'data-library.menu.salary-setup.groups' => 'Salary Groups',
+    'data-library.menu.inventory' => 'Asset Inventory',
+    'data-library.menu.inventory.category' => 'Categories'
 ];

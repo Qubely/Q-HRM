@@ -88,6 +88,7 @@
                                 </li>
                             </ul>
                         </li>
+
                         <li>
                             <a href="{{url('admin/data-library/board')}}">{{pxLang('admin.main-nav','data-library.menu.board')}}</a>
                         </li>
@@ -96,6 +97,14 @@
                         </li>
                         <li>
                             <a href="{{url('admin/data-library/banks')}}">{{pxLang('admin.main-nav','data-library.menu.bank')}}</a>
+                        </li>
+                         <li>
+                            <a href="javascript: void(0);" class="has-arrow waves-effect" >{{pxLang('admin.main-nav','data-library.menu.inventory')}}</a>
+                            <ul class="sub-menu">
+                                <li>
+                                    <a href="{{url('admin/data-library/inventory/category')}}">{{pxLang('admin.main-nav','data-library.menu.inventory.category')}}</a>
+                                </li>
+                            </ul>
                         </li>
                     </ul>
                 </li>

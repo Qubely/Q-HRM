@@ -40,6 +40,10 @@ trait DataLibratyTrait {
                     'name' => 'Lib Bank Crud',
                     'keys' => ['view','store','bulk_update','delete','pdf','excel','edit']
                 ],
+                [
+                    'name' => 'Lib Inventory Cat Crud',
+                    'keys' => ['view','store','bulk_update','delete','pdf','excel','edit']
+                ],
             ]
         ];
     }
