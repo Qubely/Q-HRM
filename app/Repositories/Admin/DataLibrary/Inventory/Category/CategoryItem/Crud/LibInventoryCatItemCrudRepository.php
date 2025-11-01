@@ -1,9 +1,9 @@
 <?php
 
-namespace App\Repositories\Admin\DataLibrary\Inventory\Category\Crud;
+namespace App\Repositories\Admin\DataLibrary\Inventory\Category\CategoryItem\Crud;
 
-use App\Http\Requests\Admin\DataLibrary\Inventory\Category\Crud\ValidateUpdateLibInventoryCat;
-use App\Models\LibInventoryCat;
+use App\Http\Requests\Admin\DataLibrary\Inventory\Category\CategoryItem\Crud\ValidateUpdateLibInventoryCatItem;
+use App\Models\LibInventoryCatItem;
 use App\Repositories\BaseRepository;
 use App\Traits\BaseTrait;
 use Carbon\Carbon;
@@ -12,11 +12,17 @@ use Illuminate\Support\Facades\Validator;
 use Illuminate\Http\JsonResponse;
 use Auth;
 use DB;
-class  LibInventoryCatCrudRepository extends BaseRepository implements ILibInventoryCatCrudRepository {
+use Webpatser\Uuid\Uuid;
+
+class  LibInventoryCatItemCrudRepository extends BaseRepository implements ILibInventoryCatItemCrudRepository {
 
     use BaseTrait;
     public function __construct() {
-        $this->LoadModels(['LibInventoryCat']);
+        $this->LoadModels(['LibInventoryCatItem']);
+        $this->sizes =  [
+            ['width'=> 400, 'height'=> 400,'com'=> 100],
+            ['width'=> 80, 'height'=> 80,'com'=> 100],
+        ];
     }
 
     /**
@@ -28,7 +34,8 @@ class  LibInventoryCatCrudRepository extends BaseRepository implements ILibInven
      */
     public function index($request,$id=null) : array
     {
-       return $this->getPageDefault(model: $this->LibInventoryCat, id: $id);
+       $where = [['lib_inventory_cat_id','=',$request->cat_item_id]];
+       return $this->getPageDefault(model: $this->LibInventoryCatItem, id: $id,where:$where);
     }
 
 
@@ -40,10 +47,10 @@ class  LibInventoryCatCrudRepository extends BaseRepository implements ILibInven
      */
     public function list($request) : JsonResponse
     {
-        $model = LibInventoryCat::withCount(['totalItems']);
+        $model = LibInventoryCatItem::with(['assigned'])->where([['lib_inventory_cat_id','=',$request->lib_inventory_cat_id]]);
         $this->saveTractAction(
             $this->getTrackData(
-                title: 'LibInventoryCat was viewed by '.$request?->auth?->name.' at '.Carbon::now()->format('d M Y H:i:s A'),
+                title: 'LibInventoryCatItem was viewed by '.$request?->auth?->name.' at '.Carbon::now()->format('d M Y H:i:s A'),
                 request: $request,
                 onlyTitle: true
             )
@@ -52,10 +59,13 @@ class  LibInventoryCatCrudRepository extends BaseRepository implements ILibInven
         ->editColumn('created_at', function($item) {
             return  Carbon::parse($item->created_at)->format('d-m-Y');
         })
-         ->editColumn('created_at', function($item) {
-            return  Carbon::parse($item->created_at)->format('d-m-Y');
+        ->addColumn('image', function($item) {
+            $image = getRowImage($item);
+            return  "<img src='$image'  class='img-fluid'/>";
         })
-
+        ->editColumn('status', function($item) {
+            return  getReconStatus($item);
+        })
         ->escapeColumns([])
         ->make(true);
     }
@@ -70,17 +80,32 @@ class  LibInventoryCatCrudRepository extends BaseRepository implements ILibInven
     {
         DB::beginTransaction();
         try {
-            LibInventoryCat::create([
+            $path = imagePaths()['dyn_image'];
+            $image = $request->file('image');
+            $image_link = null;
+            $extension = null;
+            if ($request->hasFile('image')) {
+                $image_link = (string) Uuid::generate(4);
+                $extension = $image->getClientOriginalExtension();
+                $image = $this->imageVersioning([
+                    'image' => $image, 'path' => $path, 'image_link' => $image_link, 'extension' => $extension,
+                    'appendSize' => true,
+                    'onlyAppend' => $this->sizes
+                ]);
+            }
+            LibInventoryCatItem::create([
                 ...$request->all(),
-                'serial' => $this->facSrWc($this->LibInventoryCat)
+                'image' => $image_link,
+                'extension' => $extension,
+                'serial' => $this->facSrWc($this->LibInventoryCatItem,['where'=>[[['lib_inventory_cat_id','=',$request->lib_inventory_cat_id]]]])
             ]);
             $response['extraData'] = ['inflate' => pxLang($request->lang,'','common.action_success') ];
-            $this->saveTractAction($this->getTrackData(title: "LibInventoryCat was created by ".$request?->auth?->name,request: $request));
+            $this->saveTractAction($this->getTrackData(title: "LibInventoryCatItem was created by ".$request?->auth?->name,request: $request));
             DB::commit();
             return $this->response(['type' => 'success', 'data' => $response]);
         } catch (\Exception $e) {
             DB::rollback();
-            $this->saveError($this->getSystemError(['name' => 'LibInventoryCat_store_error']), $e);
+            $this->saveError($this->getSystemError(['name' => 'LibInventoryCatItem_store_error']), $e);
             return $this->response(['type' => 'noUpdate', 'title' => pxLang($request->lang,'','common.server_wrong')]);
         }
     }
@@ -94,14 +119,33 @@ class  LibInventoryCatCrudRepository extends BaseRepository implements ILibInven
      */
     public function update($request,$id) : JsonResponse
     {
-        $row = LibInventoryCat::find($id);
+        $row = LibInventoryCatItem::find($id);
         if(empty($row)){
             return  $this->response(['type' => 'noUpdate', 'title' =>  '<span class="text-danger">'.pxLang($request->lang,'','common.no_resourse').'</span>']);
         }
         $rowRef = [...$row->toArray()];
         $row->fill($request->all());
+        $path = imagePaths()['dyn_image'];
+        $image = $request->file('image');
+        if ($request->hasFile('image')) {
+            $this->deleteImageVersions([
+                'path' => imagePaths()['dyn_image'],
+                'image_link' => $row->image,
+                'extension' => $row->extension,
+                'sizes' =>  $this->sizes
+            ]);
+            $image_link = (string) Uuid::generate(4);
+            $extension = $image->getClientOriginalExtension();
+            $image = $this->imageVersioning([
+                'image' => $image, 'path' => $path, 'image_link' => $image_link, 'extension' => $extension,
+                'appendSize' => true,
+                'onlyAppend' => $this->sizes
+            ]);
+            $row->image =  $image_link;
+            $row->extension = $extension;
+        }
         if($row->isDirty()){
-            $validator = Validator::make($request->all(), (new ValidateUpdateLibInventoryCat())->rules($request,$row));
+            $validator = Validator::make($request->all(), (new ValidateUpdateLibInventoryCatItem())->rules($request,$row));
             if ($validator->fails()) {
                 return $this->response(['type' => 'validation','errors' => $validator->errors()]);
             }
@@ -109,12 +153,12 @@ class  LibInventoryCatCrudRepository extends BaseRepository implements ILibInven
             try {
                 $row->save();
                 $data['extraData'] = ["inflate" =>  pxLang($request->lang,'','common.action_success')];
-                $this->saveTractAction($this->getTrackData(title: " LibInventoryCat ".$row?->name.' was updated by '.$request?->auth?->name,request: $request, row: $rowRef, type: 'to'));
+                $this->saveTractAction($this->getTrackData(title: " LibInventoryCatItem ".$row?->name.' was updated by '.$request?->auth?->name,request: $request, row: $rowRef, type: 'to'));
                 DB::commit();
                 return $this->response(['type' => 'success','data' => $data]);
             } catch (\Exception $e) {
                 DB::rollback();
-                $this->saveError($this->getSystemError(['name'=>'LibInventoryCat_update_error']), $e);
+                $this->saveError($this->getSystemError(['name'=>'LibInventoryCatItem_update_error']), $e);
                 return $this->response(["type"=>"wrong","lang"=>"server_wrong"]);
             }
         } else {
@@ -130,11 +174,11 @@ class  LibInventoryCatCrudRepository extends BaseRepository implements ILibInven
      */
     public function updateList($request) : JsonResponse
     {
-        $i = LibInventoryCat::whereIn('id',$request->ids)->select(['id','serial'])->get();;
+        $i = LibInventoryCatItem::whereIn('id',$request->ids)->select(['id','serial'])->get();;
         $dirty = [];
         if (count($i) > 0) {
             foreach ($i as $key => $value) {
-                $value->serial = $request->serial[$value->id];
+                 $value->serial = $request->serial[$value->id];
                 if ($value->isDirty()) {
                     $dirty[$key] = "yes";
                 }
@@ -148,12 +192,12 @@ class  LibInventoryCatCrudRepository extends BaseRepository implements ILibInven
                     $data['extraData'] = [
                         "inflate" => pxLang($request->lang,'','common.action_update_success')
                     ];
-                    $this->saveTractAction($this->getTrackData(title: "LibInventoryCat list was updated by ".$request?->auth?->name, request: $request));
+                    $this->saveTractAction($this->getTrackData(title: "LibInventoryCatItem list was updated by ".$request?->auth?->name, request: $request));
                     DB::commit();
                     return $this->response(['type' => 'success','data' => $data]);
                 } catch (\Exception $e) {
                     DB::rollback();
-                    $this->saveError($this->getSystemError(['name' => 'LibInventoryCat_bulk_update_error']), $e);
+                    $this->saveError($this->getSystemError(['name' => 'LibInventoryCatItem_bulk_update_error']), $e);
                     return $this->response(['type' => 'wrong', 'lang' => 'server_wrong']);
                 }
             } else {
@@ -174,7 +218,7 @@ class  LibInventoryCatCrudRepository extends BaseRepository implements ILibInven
     public function deleteList($request) : JsonResponse
     {
         $errors = [];
-        $i = LibInventoryCat::whereIn('id',$request->ids)->select(['id'])->get();
+        $i = LibInventoryCatItem::whereIn('id',$request->ids)->select(['id'])->get();
         if (count($i) > 0) {
             // $errors = $this->checkInUse([
             //     "rows" => $i,
@@ -191,18 +235,24 @@ class  LibInventoryCatCrudRepository extends BaseRepository implements ILibInven
             DB::beginTransaction();
             try {
                 foreach ($i as $key => $value) {
+                    $this->deleteImageVersions([
+                        'path' => imagePaths()['dyn_image'],
+                        'image_link' => $value->image,
+                        'extension' => $value->extension,
+                        'sizes' =>  $this->sizes
+                    ]);
                     $value->delete();
                 }
                 $data['extraData'] = [
                     "inflate" => pxLang($request->lang,'','common.action_delete_success'),
                     "redirect" => null
                 ];
-                $this->saveTractAction($this->getTrackData(title: "LibInventoryCat list was deleted by ".$request?->auth?->name, request: $request));
+                $this->saveTractAction($this->getTrackData(title: "LibInventoryCatItem list was deleted by ".$request?->auth?->name, request: $request));
                 DB::commit();
                 return $this->response(['type' => 'success',"data"=>$data]);
             } catch (\Exception $e) {
                 DB::rollback();
-                $this->saveError($this->getSystemError(['name' => 'LibInventoryCat_store_error']), $e);
+                $this->saveError($this->getSystemError(['name' => 'LibInventoryCatItem_store_error']), $e);
                 return $this->response(['type' => 'wrong', 'lang' => 'server_wrong']);
             }
         } else {

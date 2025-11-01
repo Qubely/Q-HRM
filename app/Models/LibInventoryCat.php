@@ -15,4 +15,9 @@ class LibInventoryCat extends Model
         'serial'
     ];
     //vpx_attach
+
+    public function totalItems()
+    {
+        return $this->hasMany(LibInventoryCatItem::class,'lib_inventory_cat_id','id');
+    }
 }

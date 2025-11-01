@@ -6,6 +6,8 @@ use App\Repositories\BaseRepository;
 use App\Repositories\IBaseRepository;
 use Illuminate\Support\ServiceProvider;
 //vpx_imports
+use App\Repositories\Admin\DataLibrary\Inventory\Category\CategoryItem\Crud\ILibInventoryCatItemCrudRepository;
+use App\Repositories\Admin\DataLibrary\Inventory\Category\CategoryItem\Crud\LibInventoryCatItemCrudRepository;
 use App\Repositories\Admin\DataLibrary\Inventory\Category\Crud\ILibInventoryCatCrudRepository;
 use App\Repositories\Admin\DataLibrary\Inventory\Category\Crud\LibInventoryCatCrudRepository;
 use App\Repositories\Admin\Attendance\Reconciliation\Dt\EmployeeRecon\IEmployeeReconDtRepository;
@@ -67,6 +69,7 @@ class RepositoryServiceProvider extends ServiceProvider
         {
             $this->app->bind(abstract: IBaseRepository::class, concrete: BaseRepository::class);
             //vpx_attach
+            $this->app->bind(abstract: ILibInventoryCatItemCrudRepository::class, concrete: LibInventoryCatItemCrudRepository::class);
             $this->app->bind(abstract: ILibInventoryCatCrudRepository::class, concrete: LibInventoryCatCrudRepository::class);
             $this->app->bind(abstract: IEmployeeReconDtRepository::class, concrete: EmployeeReconDtRepository::class);
             $this->app->bind(abstract: IAddReconciliationRepository::class, concrete: AddReconciliationRepository::class);

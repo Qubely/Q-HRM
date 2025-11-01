@@ -15,10 +15,12 @@ return [
     ],
     'fields' => [
         'name' => 'Name',
+        'total_items'=> 'Total Items'
     ],
     'table' => [
         'id' => 'ID',
         'name' => 'Name',
+        'total_items_count' => 'Total Items',
         'created' => 'Created',
         'actions' => 'Actions',
     ]

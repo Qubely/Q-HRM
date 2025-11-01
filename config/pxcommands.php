@@ -170,6 +170,7 @@ return [
         'employee.attendance.reconciliation.crud' => 'employee/attendance/reconciliation/crud/index',
         'employee.attendance.reports.monthly.details.modal.add-reconciliation' => 'employee/attendance/reports/monthly/details/modal/add-reconciliation/index',
         'admin.attendance.reconciliation.crud' => 'admin/attendance/reconciliation/crud/index',
-        'admin.data-library.inventory.category.crud' => 'admin/data-library/inventory/category/crud/index'
+        'admin.data-library.inventory.category.crud' => 'admin/data-library/inventory/category/crud/index',
+        'admin.data-library.inventory.category.category-item.crud' => 'admin/data-library/inventory/category/category-item/crud/index'
     ]
 ];
