@@ -5,6 +5,7 @@ return [
     'attendance.menu' => 'Attendance',
     'attendance.menu.attendance_report' => 'Attendance Report',
     'attendance.menu.attendance_report_monthly' => 'Monthly Report',
+    'attendance.menu.recon' => 'Reconciliation Request',
     'employee.menu' => 'Manage Employee',
     'employee.menu.draft' => 'Draft Employee',
     'employee.menu.active' => 'Active Employee',

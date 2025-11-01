@@ -168,6 +168,7 @@ return [
         'employee.attendance.report.monthly.details' => 'employee/attendance/report/monthly/details/index',
         'admin.attendance.report.employee.load' => 'admin/attendance/report/employee/load/index',
         'employee.attendance.reconciliation.crud' => 'employee/attendance/reconciliation/crud/index',
-        'employee.attendance.reports.monthly.details.modal.add-reconciliation' => 'employee/attendance/reports/monthly/details/modal/add-reconciliation/index'
+        'employee.attendance.reports.monthly.details.modal.add-reconciliation' => 'employee/attendance/reports/monthly/details/modal/add-reconciliation/index',
+        'admin.attendance.reconciliation.crud' => 'admin/attendance/reconciliation/crud/index'
     ]
 ];

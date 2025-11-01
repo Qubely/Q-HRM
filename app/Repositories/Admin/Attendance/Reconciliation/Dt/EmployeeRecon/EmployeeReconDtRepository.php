@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Repositories\Employee\Attendance\Reconciliation\Dt\ReconHistory;
+namespace App\Repositories\Admin\Attendance\Reconciliation\Dt\EmployeeRecon;
 
 use App\Models\EmployeeAttendanceRecon;
 use App\Repositories\BaseRepository;
@@ -8,15 +8,12 @@ use App\Traits\BaseTrait;
 use Carbon\Carbon;
 use DataTables;
 use Illuminate\Http\JsonResponse;
-use Auth;
-class ReconHistoryDtRepository extends BaseRepository implements IReconHistoryDtRepository {
+class EmployeeReconDtRepository extends BaseRepository implements IEmployeeReconDtRepository {
 
     use BaseTrait;
     public function __construct() {
         $this->LoadModels(['EmployeeAttendanceRecon']);
-
     }
-
     /**
      * Get the page default resource
      *
@@ -26,8 +23,7 @@ class ReconHistoryDtRepository extends BaseRepository implements IReconHistoryDt
      */
     public function index($request) : array
     {
-       $where = [['employee_id','=',Auth::user()->id]];
-       return $this->getPageDefault(model: $this->EmployeeAttendanceRecon, id: null,where: $where);
+       return $this->getPageDefault(model: $this->EmployeeAttendanceRecon, id: null);
     }
 
 
@@ -39,7 +35,7 @@ class ReconHistoryDtRepository extends BaseRepository implements IReconHistoryDt
      */
     public function list($request) : JsonResponse
     {
-        $model = EmployeeAttendanceRecon::where([['employee_id','=',$request?->auth?->id]])->with(['att']);
+        $model = EmployeeAttendanceRecon::query();
         $this->saveTractAction(
             $this->getTrackData(
                 title: 'EmployeeAttendanceRecon was viewed by '.$request?->auth?->name.' at '.Carbon::now()->format('d M Y H:i:s A'),
@@ -70,4 +66,27 @@ class ReconHistoryDtRepository extends BaseRepository implements IReconHistoryDt
         ->make(true);
     }
 
+     /**
+     * Ban the reconciliated
+     *
+     * @param Request $request
+     * @return JsonResponse
+     */
+    public function ban($request) : JsonResponse
+    {
+        $req = EmployeeAttendanceRecon::find($request->id);
+        if(empty($req)) {
+            return $this->response(['type'=>'noUpdate','title'=> pxLang('','','common.page_not_found')]);
+        }
+        try {
+            $req->status = 'Declined';
+            $req->save();
+            $response['extraData'] = [ 'inflate' => pxLang('','','common.action_success') ];
+            return $this->response(['type' => 'success', 'data' => $response]);
+        } catch (\Exception $e) {
+            $this->saveError($this->getSystemError(['name' => 'UqProfession_store_error']), $e);
+            return $this->response(['type' => 'wrong', 'lang' => 'server_wrong']);
+        }
+
+    }
 }

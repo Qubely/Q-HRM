@@ -50,6 +50,9 @@
                     </a>
                     <ul class="sub-menu">
                         <li>
+                            <a href="{{url('admin/attendance/reconciliation/employee-recon/list')}}" >{{pxLang('admin.main-nav','attendance.menu.recon')}}</a>
+                        </li>
+                        <li>
                             <a href="javascript: void(0);"  class="has-arrow waves-effect">{{pxLang('admin.main-nav','attendance.menu.attendance_report')}}</a>
                             <ul class="sub-menu">
                                 <li>

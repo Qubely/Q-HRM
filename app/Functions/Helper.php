@@ -39,3 +39,18 @@ if (! function_exists('pxLang')) {
 function getPolicyKey($Str,$key) {
     return $Str::lower($Str::replace(' ','_',$key));
 }
+
+function getReconStatus($item){
+    switch ($item?->status) {
+        case 'Pending':
+            return '<span class="badge bg-waning"> Pending </span>';
+            break;
+        case 'Declined':
+            return '<span class="badge bg-danger"> Declined </span>';
+            break;
+
+        default:
+            return '<span class="badge bg-success"> Approved </span>';
+            break;
+    }
+}
