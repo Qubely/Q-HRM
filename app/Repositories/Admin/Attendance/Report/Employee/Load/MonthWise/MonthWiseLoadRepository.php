@@ -65,6 +65,7 @@ class MonthWiseLoadRepository extends BaseRepository implements IMonthWiseLoadRe
             $att_date = $date->format('Y-m-d');
             $att = $attendances?->where('att_date',$att_date)->first();
             $dates[] = [
+                'id' => $att?->id,
                 'view' => $date->format('d M')." (".$date->format('D').")",
                 'att_date' => $att_date,
                 'has' => ($att == null) ? false : true,

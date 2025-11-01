@@ -37,6 +37,6 @@ class AttendanceDetailsController extends Controller
         ]);
         $data = $this->iMonthWiseLoadRepo->display($request);
         $data['lang'] = $this->lang;
-        return view('employee.pages.attendance.report.monthly.details.index')->with('data',$data);
+        return view('employee.pages.attendance.reports.monthly.details.index')->with('data',$data);
     }
 }

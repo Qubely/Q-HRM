@@ -22,4 +22,9 @@ class EmployeeAttendance extends Model
         'latitude_out',
         'sent_sms',
     ];
+
+    public function reqRequest()
+    {
+        return $this->hasOne(EmployeeAttendanceRecon::class,'employee_attendance_id','id');
+    }
 }

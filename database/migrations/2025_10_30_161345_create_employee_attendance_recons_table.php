@@ -19,6 +19,7 @@ return new class extends Migration
             $table->string('out_time',100);
             $table->string('reason');
             $table->string('status')->default('Pending');
+            $table->timestamps();
         });
     }
 

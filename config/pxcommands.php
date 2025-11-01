@@ -61,7 +61,8 @@ return [
                     'fontAwesome',
                     'boxIcon',
                     'jqConfirm',
-                    'datatable5'
+                    'datatable5',
+                    'dateTimePicker'
                 ],
                 'local' => [
                     'px/plugins',
@@ -111,7 +112,7 @@ return [
             'jqConfirm' => '<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jquery-confirm/3.3.4/jquery-confirm.min.css" integrity="sha512-0V10q+b1Iumz67sVDL8LPFZEEavo6H/nBSyghr7mm9JEQkOAm91HNoZQRvQdjennBb/oEuW+8oZHVpIKq+d25g==" crossorigin="anonymous" referrerpolicy="no-referrer" />',
             'datatable5' => '<link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.13.10/css/jquery.dataTables.min.css">',
             'dataTableSelectCheckbox' => '<link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/jquery-datatables-checkboxes@1.2.13/css/dataTables.checkboxes.css">',
-            'dateTimePicker' => '<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jquery-datetimepicker/2.5.20/jquery.datetimepicker.css" integrity="sha512-bYPO5jmStZ9WI2602V2zaivdAnbAhtfzmxnEGh9RwtlI00I9s8ulGe4oBa5XxiC6tCITJH/QG70jswBhbLkxPw==" crossorigin="anonymous" referrerpolicy="no-referrer" />'
+            'dateTimePicker' => '<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jquery-datetimepicker/2.5.20/jquery.datetimepicker.min.css" integrity="sha512-f0tzWhCwVFS3WeYaofoLWkTP62ObhewQ1EZn65oSYDZUg1+CyywGKkWzm8BxaJj5HGKI72PnMH9jYyIFz+GH7g==" crossorigin="anonymous" referrerpolicy="no-referrer" />'
         ]
     ],
     'scripts' => [
@@ -166,6 +167,7 @@ return [
         'employee.attendance.entry.form.store' => 'employee/attendance/entry/form/store/index',
         'employee.attendance.report.monthly.details' => 'employee/attendance/report/monthly/details/index',
         'admin.attendance.report.employee.load' => 'admin/attendance/report/employee/load/index',
-        'employee.attendance.reconciliation.crud' => 'employee/attendance/reconciliation/crud/index'
+        'employee.attendance.reconciliation.crud' => 'employee/attendance/reconciliation/crud/index',
+        'employee.attendance.reports.monthly.details.modal.add-reconciliation' => 'employee/attendance/reports/monthly/details/modal/add-reconciliation/index'
     ]
 ];

@@ -6,6 +6,8 @@ use App\Repositories\BaseRepository;
 use App\Repositories\IBaseRepository;
 use Illuminate\Support\ServiceProvider;
 //vpx_imports
+use App\Repositories\Employee\Attendance\Reports\Monthly\Details\Modal\AddReconciliation\IAddReconciliationRepository;
+use App\Repositories\Employee\Attendance\Reports\Monthly\Details\Modal\AddReconciliation\AddReconciliationRepository;
 use App\Repositories\Employee\Attendance\Reconciliation\Dt\ReconHistory\IReconHistoryDtRepository;
 use App\Repositories\Employee\Attendance\Reconciliation\Dt\ReconHistory\ReconHistoryDtRepository;
 use App\Repositories\Admin\Attendance\Report\Employee\Load\MonthWise\IMonthWiseLoadRepository;
@@ -61,6 +63,7 @@ class RepositoryServiceProvider extends ServiceProvider
         {
             $this->app->bind(abstract: IBaseRepository::class, concrete: BaseRepository::class);
             //vpx_attach
+            $this->app->bind(abstract: IAddReconciliationRepository::class, concrete: AddReconciliationRepository::class);
             $this->app->bind(abstract: IReconHistoryDtRepository::class, concrete: ReconHistoryDtRepository::class);
             $this->app->bind(abstract: IMonthWiseLoadRepository::class, concrete: MonthWiseLoadRepository::class);
             $this->app->bind(abstract: IEmployeeAttendanceEntryStoreRepository::class, concrete: EmployeeAttendanceEntryStoreRepository::class);
